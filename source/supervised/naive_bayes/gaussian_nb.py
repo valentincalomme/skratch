@@ -1,6 +1,6 @@
 import numpy as np
 
-from naive_bayes.nb_classifier import NBClassifier
+from supervised.naive_bayes.nb_classifier import NBClassifier
 
 
 class GaussianNB(NBClassifier):
