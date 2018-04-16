@@ -1,124 +1,163 @@
 import numpy as np
 
 
-class Optimizer(object):
-    def __init__(self, **kwargs):
-        raise NotImplementedError
+def gradient(f):
 
-    def update(self, x):
-        raise NotImplementedError
+    def _gradient(x, wrt=None):
 
-    def gen_optimization_steps(self, x):
-        raise NotImplementedError
+        h = 1E-8
 
-    def gradient_numerical_estimation(self, x, with_respect_to=None):
-        input_type = type(x)
+        gradients = np.zeros(len(x), dtype=float)
 
-        if input_type != np.ndarray:
-            x = np.array([x])
+        if wrt is None:
+            wrt = np.arange(len(x))
 
-        if with_respect_to is None:
-            with_respect_to = range(len(x))
+        for i in wrt:
+            diff = np.zeros(len(x), dtype=float)
+            diff[i] = h
 
-        gradients = np.zeros_like(x, dtype=float)
-        compute_gradient = lambda x, h: (self.function(x + h) - self.function(x - h)) / (2 * np.sum(h))
-
-        for i in with_respect_to:
-            h = np.zeros_like(x, dtype=float)
-            h[i] = 1E-8
-            gradients[i] = compute_gradient(x, h)
-
-        if input_type != np.ndarray:
-            gradients = np.squeeze(gradients)
+            gradients[i] = (f(x + diff) - f(x - diff)) / (2 * np.sum(diff))
 
         return gradients
 
-    def complete_optimization(self, x):
-        for i in self.gen_optimization_steps(x):
-            result = i
-
-        return result
+    return _gradient
 
 
 class GradientDescentOptimizer(Optimizer):
-    def __init__(self, function, gradient=None, learning_rate=0.2, stopping_criterion=1E-6):
-        self.function = function
-        self.gradient = gradient
+
+    def __init__(self, learning_rate=0.2, momentum=0):
+
+        self.momentum = momentum
         self.learning_rate = learning_rate
-        self.stopping_criterion = stopping_criterion
 
-        if gradient is None:
-            self.gradient = self.gradient_numerical_estimation
+        self.weight_update = None
 
-    def do_optimization_step(self, x):
-        return x - self.learning_rate * self.gradient(x)
+    def update(self, x, grad):
 
-    def gen_optimization_steps(self, x):
-        last_value = float('inf')
-        current_value = 0.0
+        if self.weight_update is None:
+            self.weight_update = np.zeros(len(x))
 
-        while (last_value - current_value > self.stopping_criterion):
-            last_value = self.function(x)
-            x = self.do_optimization_step(x)
-            current_value = self.function(x)
-            yield x
+        self.weight_update = self.momentum * self.weight_update + (1 - self.momentum) * grad
 
+        return x - self.learning_rate * self.weight_update
 
-class CoordinateDescent(Optimizer):
-    def __init__(self, function, gradient=None, alpha=0.2, epsilon=1E-6):
-        self.function = function
-        self.gradient = gradient
-        self.alpha = alpha
-        self.epsilon = epsilon
+########################################################################################################################
+########                                            ML FROM SCRATCH                                            #########
+########################################################################################################################
 
-        if not gradient:
-            self.gradient = self.gradient_estimation
+class NesterovAcceleratedGradient():
 
-    def update(self, x, with_respect_to):
-        return x - self.alpha * self.g(x, with_respect_to)
+    def __init__(self, learning_rate=0.001, momentum=0.4):
+        self.learning_rate = learning_rate
+        self.momentum = momentum
+        self.w_updt = np.array([])
 
-    def gen(self, x):
+    def update(self, w, grad_func):
+        # Calculate the gradient of the loss a bit further down the slope from w
+        approx_future_grad = np.clip(grad_func(w - self.momentum * self.w_updt), -1, 1)
+        # Initialize on first update
+        if not self.w_updt.any():
+            self.w_updt = np.zeros(np.shape(w))
 
-        def improvable_directions(current_weights):
-            """ Detect which direction would minimize the cost function """
-            return [(self.f(current_weights) - self.f(self.update(current_weights, with_respect_to=i))) > self.epsilon
-                    for i in range(len(current_weights))]
-
-        possible_to_improve = improvable_directions(x)
-        while any(possible_to_improve):
-            direction = np.where(possible_to_improve)[0][0]
-
-            last_value = float('inf')
-            current_value = 0.0
-
-            while (last_value - current_value > self.epsilon):
-                last_value = self.f(x)
-                x = self.update(x, with_respect_to=direction)
-                current_value = self.f(x)
-                yield x
-
-            possible_to_improve = improvable_directions(x)
+        self.w_updt = self.momentum * self.w_updt + self.learning_rate * approx_future_grad
+        # Move against the gradient to minimize loss
+        return w - self.w_updt
 
 
-class StochasticGradientDescent(Optimizer):
-    pass
+class Adagrad():
+
+    def __init__(self, learning_rate=0.01):
+        self.learning_rate = learning_rate
+        self.G = None  # Sum of squares of the gradients
+        self.eps = 1e-8
+
+    def update(self, w, grad_wrt_w):
+        # If not initialized
+        if self.G is None:
+            self.G = np.zeros(np.shape(w))
+        # Add the square of the gradient of the loss function at w
+        self.G += np.power(grad_wrt_w, 2)
+        # Adaptive gradient with higher learning rate for sparse data
+        return w - self.learning_rate * grad_wrt_w / np.sqrt(self.G + self.eps)
 
 
-class Adagrad(Optimizer):
-    pass
+class Adadelta():
+
+    def __init__(self, rho=0.95, eps=1e-6):
+        self.E_w_updt = None  # Running average of squared parameter updates
+        self.E_grad = None   # Running average of the squared gradient of w
+        self.w_updt = None   # Parameter update
+        self.eps = eps
+        self.rho = rho
+
+    def update(self, w, grad_wrt_w):
+        # If not initialized
+        if self.w_updt is None:
+            self.w_updt = np.zeros(np.shape(w))
+            self.E_w_updt = np.zeros(np.shape(w))
+            self.E_grad = np.zeros(np.shape(grad_wrt_w))
+
+        # Update average of gradients at w
+        self.E_grad = self.rho * self.E_grad + (1 - self.rho) * np.power(grad_wrt_w, 2)
+
+        RMS_delta_w = np.sqrt(self.E_w_updt + self.eps)
+        RMS_grad = np.sqrt(self.E_grad + self.eps)
+
+        # Adaptive learning rate
+        adaptive_lr = RMS_delta_w / RMS_grad
+
+        # Calculate the update
+        self.w_updt = adaptive_lr * grad_wrt_w
+
+        # Update the running average of w updates
+        self.E_w_updt = self.rho * self.E_w_updt + (1 - self.rho) * np.power(self.w_updt, 2)
+
+        return w - self.w_updt
 
 
-class Adadelta(Optimizer):
-    pass
+class RMSprop():
+
+    def __init__(self, learning_rate=0.01, rho=0.9):
+        self.learning_rate = learning_rate
+        self.Eg = None  # Running average of the square gradients at w
+        self.eps = 1e-8
+        self.rho = rho
+
+    def update(self, w, grad_wrt_w):
+        # If not initialized
+        if self.Eg is None:
+            self.Eg = np.zeros(np.shape(grad_wrt_w))
+
+        self.Eg = self.rho * self.Eg + (1 - self.rho) * np.power(grad_wrt_w, 2)
+
+        # Divide the learning rate for a weight by a running average of the magnitudes of recent
+        # gradients for that weight
+        return w - self.learning_rate * grad_wrt_w / np.sqrt(self.Eg + self.eps)
 
 
-class RMSprop(Optimizer):
-    pass
+class Adam():
 
+    def __init__(self, learning_rate=0.001, b1=0.9, b2=0.999):
+        self.learning_rate = learning_rate
+        self.eps = 1e-8
+        self.m = None
+        self.v = None
+        # Decay rates
+        self.b1 = b1
+        self.b2 = b2
 
-class Adam(Optimizer):
-    pass
+    def update(self, w, grad_wrt_w):
+        # If not initialized
+        if self.m is None:
+            self.m = np.zeros(np.shape(grad_wrt_w))
+            self.v = np.zeros(np.shape(grad_wrt_w))
 
+        self.m = self.b1 * self.m + (1 - self.b1) * grad_wrt_w
+        self.v = self.b2 * self.v + (1 - self.b2) * np.power(grad_wrt_w, 2)
 
-class NesterovAcceleratedGradient(Optimizer):
-    pass
+        m_hat = self.m / (1 - self.b1)
+        v_hat = self.v / (1 - self.b2)
+
+        self.w_updt = self.learning_rate * m_hat / (np.sqrt(v_hat) + self.eps)
+
+        return w - self.w_updt
