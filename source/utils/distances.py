@@ -1,132 +1,204 @@
+from itertools import product
+
 import numpy as np
+np.seterr(divide='ignore', invalid='ignore')
+
+
 import collections
 
-def validate_input(x, y):
-    """
-    Ensures that both x and y are numpy arrays or objects that can be transformed
-    into numpy arrays. It also ensures that both arrays are the same size
-    """
 
-    x = np.array(x) # makes sure x is a numpy array
-    y = np.array(y) # makes sure y is a numpy array
+def pdist(samples, distance):
 
-    assert len(x) == len(y), "both vectors must have the same length"
+    distances = np.empty((len(samples), len(samples)))
 
-    return x, y
+    for i, a in enumerate(samples):
+        for j, b in enumerate(samples[i:], i):
 
-def MinkowskiDistance(x, y, n):
-    """
-    Computes the Minkowski distance between two points
-    :param x: first point
-    :param y: second point
-    :param n: power
-    :return: Minkowski distance between x and y
-    """
+            dist = distance(a, b)
 
-    x, y = validate_input(x, y)
+            distances[i, j] = dist
+            distances[j, i] = dist
 
-    # Ensures that the power is valid
-    assert n >= 1, 'power must be greater or equal to 1'
+    return distances
+
+
+def cdist(A, B, distance):
+
+    distances = np.empty((len(A), len(B)))
+
+    for i, a in enumerate(A):
+        for j, b in enumerate(B):
+
+            dist = distance(a, b)
+
+            distances[i, j] = dist
+
+    return distances
+
+
+def minkowski(x, y, n):
+
+    if n < 1 or n % 1 != 0:
+        raise ValueError("n should be a strictly positive integer, not {}".format(n))
 
     return (np.sum(np.abs(x - y) ** n)) ** (1 / n)
 
-def EuclideanDistance(x, y):
-    """
-    Computes the euclidean distance between two points
-    :param x: first point
-    :param y: second point
-    :return: euclidean distance between x and y
-    """
-    return MinkowskiDistance(x, y, 2)
+
+def euclidean(x, y):
+
+    return minkowski(x, y, 2)
 
 
-def ManhattanDistance(x, y):
-    """
-    Computes the Manhattan distance between two points
-    :param x: first point
-    :param y: second point
-    :return: Manhattan distance between x and y
-    """
-    return MinkowskiDistance(x, y, 1)
+def sqeuclidean(x, y):
+
+    return np.sum(np.abs(x - y)**2.0)
 
 
-def CanberraDistance(x, y):
-    """
-     Computes the Canberra distance between two points
-     :param x: first point
-     :param y: second point
-     :return: Canberra distance between x and y
-    """
+def manhattan(x, y):
 
-    x, y = validate_input(x, y)
+    return minkowski(x, y, 1)
+
+
+def canberra(x, y):
 
     return np.sum(np.abs(x - y) / (np.abs(x) + np.abs(y)))
 
 
-def CosineSimilarity(x, y):
-    """
-     Computes the cosine similarity between two points
-     :param x: first point
-     :param y: second point
-     :return: cosine similarity  between x and y
-    """
+def braycurtis(x, y):
 
-    x, y = validate_input(x, y)
-
-    return np.sum(x * y) / ((np.sqrt(np.sum(x ** 2))) * (np.sqrt(np.sum(y ** 2))))
+    return np.sum(np.abs(x - y) / np.abs(x + y))
 
 
-def PearsonCorrelation(x, y):
-    """
-    Computes the Pearson Correlation between two variables
-    :param x: variable x
-    :param y: variable y
-    :return: Pearson Correlation between x and y
-    """
+def cosine(x, y):
 
-    x, y = validate_input(x, y)
-
-    return np.corrcoef(x, y)[0, 1]
+    return 1.0 - (np.sum(x * y) / ((np.sqrt(np.sum(x ** 2.0))) * (np.sqrt(np.sum(y ** 2.0)))))
 
 
-def HammingDistance(x:str, y:str):
-    """
-    Computes the hamming distance between two strings/points
-    :param x: first string/point
-    :param y: first string/point
-    :return: hamming distance between x and y
-    """
-    
+def correlation(x, y):
+
+    return 1.0 - np.corrcoef(x, y)[0, 1]
+
+
+def hamming(x: str, y: str):
+
     # Ensures that both vectors are numpy arrays
     x = np.array([x for x in x])
     y = np.array([y for y in y])
 
-    # Ensures that both vectors are the same length
-    assert len(x) == len(y), 'both vectors must have the same length'
-
     return np.sum(x != y)
 
 
-def ChebyshevDistance(x, y):
-    """
-    Computes the Chebyshev distance between two points
-    :param x: first point
-    :param y: first point
-    :return: Chebyshev distance between x and y
-    """
-
-    x, y = validate_input(x, y)
+def chebyshev(x, y):
 
     return np.max(np.abs(x - y))
 
 
-def LevenshteinDistance(x, y):
-    """
-    Computes the Levenhstein/Edit distance between two strings x and y
-    :param x: first string
-    :param y: second string
-    :return: Levenhstein/Edit distance between x and y
-    """
+def dice(x, y):
+
+    ctf = np.sum(x * np.logical_not(y))
+    cft = np.sum(y * np.logical_not(x))
+    ctt = np.sum(x * y)
+
+    if (2.0 * ctt + cft + ctf) == 0:
+        raise ZeroDivisionError()
+
+    return (ctf + cft) / (2.0 * ctt + cft + ctf)
+
+
+def kulsinski(x, y):
+
+    ctf = np.sum(x * np.logical_not(y))
+    cft = np.sum(y * np.logical_not(x))
+    ctt = np.sum(x * y)
+    n = len(x)
+
+    if (cft + ctf + n) == 0:
+        raise ZeroDivisionError()
+
+    return (ctf + cft - ctt + n) / (cft + ctf + n)
+
+
+def jaccard(x, y):
+
+    ctf = np.sum(x * np.logical_not(y))
+    cft = np.sum(y * np.logical_not(x))
+    ctt = np.sum(x * y)
+
+    if (ctt + cft + ctf) == 0:
+        raise ZeroDivisionError()
+
+    return (ctf + cft) / (ctt + cft + ctf)
+
+
+def rogerstanimoto(x, y):
+
+    ctf = np.sum(x * np.logical_not(y))
+    cft = np.sum(y * np.logical_not(x))
+    ctt = np.sum(x * y)
+    cff = np.sum(np.logical_not(x) * np.logical_not(y))
+
+    R = 2.0 * (ctf + cft)
+
+    if (ctt + cff + R) == 0:
+        raise ZeroDivisionError()
+
+    return R / (ctt + cff + R)
+
+
+def sokalmichener(x, y):
+
+    ctf = np.sum(x * np.logical_not(y))
+    cft = np.sum(y * np.logical_not(x))
+    ctt = np.sum(x * y)
+    cff = np.sum(np.logical_not(x) * np.logical_not(y))
+
+    R = 2.0 * (ctf + cft)
+    S = (cff + ctt)
+
+    if (S + R) == 0:
+        raise ZeroDivisionError()
+
+    return R / (S + R)
+
+
+def sokalsneath(x, y):
+
+    ctf = np.sum(x * np.logical_not(y))
+    cft = np.sum(y * np.logical_not(x))
+    ctt = np.sum(x * y)
+
+    R = 2.0 * (ctf + cft)
+
+    if (ctt + R) == 0:
+        raise ZeroDivisionError()
+
+    return R / (ctt + R)
+
+
+def yule(x, y):
+
+    ctf = np.sum(x * np.logical_not(y))
+    cft = np.sum(y * np.logical_not(x))
+    ctt = np.sum(x * y)
+    cff = np.sum(np.logical_not(x) * np.logical_not(y))
+
+    R = 2.0 * (ctf * cft)
+
+    if (ctt * cff + R / 2.0) == 0:
+        raise ZeroDivisionError()
+
+    return R / (ctt * cff + R / 2.0)
+
+
+def russellrao(x, y):
+
+    ctt = np.sum(x * y)
+    n = len(x)
+
+    return (n - ctt) / n
+
+
+def levenshtein(x, y):
 
     # Computes matrix
     matrix = np.zeros((len(x) + 1, len(y) + 1))
@@ -139,27 +211,11 @@ def LevenshteinDistance(x, y):
                 matrix[i, j] = matrix[i - 1, j - 1]
             else:
                 matrix[i, j] = min(matrix[i - 1, j - 1], matrix[i - 1, j], matrix[i, j - 1]) + 1
-                
+
     return matrix[len(x), len(y)]
 
 
-def EditDistance(x, y):
-    """
-    Computes the Levenhstein/Edit distance between two strings x and y
-    :param x: first string
-    :param y: second string
-    :return: Levenhstein/Edit distance between x and y
-    """
-    return LevenshteinDistance(x, y)
-
-
-def DamerauLevenshteinDistance(x, y):
-    """
-    Computes the Damerau-Levenshtein distance between two strings x and y
-    :param x: first string
-    :param y: second string
-    :return: Damerau-Levenshtein distance between x and y
-    """
+def damerau_levenshtein(x, y):
 
     # Computes matrix
     matrix = np.zeros((len(x) + 1, len(y) + 1))
