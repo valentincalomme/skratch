@@ -9,6 +9,7 @@ import string
 import scipy.spatial.distance as sc  # sc for scipy
 import utils.distances as sk  # sk for skratch
 from weighted_levenshtein import lev
+from pyxdameraulevenshtein import damerau_levenshtein_distance as dld
 import numpy as np
 
 np.seterr(divide='ignore', invalid='ignore')
@@ -21,24 +22,24 @@ minkowski_powers = 500
 
 
 distance_pairs = [
-    dict(sc=sc.cosine,         sk=sk.cosine,         binary=0),
-    dict(sc=sc.euclidean,      sk=sk.euclidean,      binary=0),
-    dict(sc=sc.correlation,    sk=sk.correlation,    binary=0),
-    dict(sc=sc.hamming,        sk=sk.hamming,        binary=0),
-    dict(sc=sc.canberra,       sk=sk.canberra,       binary=0),
-    dict(sc=sc.chebyshev,      sk=sk.chebyshev,      binary=0),
-    dict(sc=sc.braycurtis,     sk=sk.braycurtis,     binary=0),
-    dict(sc=sc.cityblock,      sk=sk.manhattan,      binary=0),
-    dict(sc=sc.sqeuclidean,    sk=sk.sqeuclidean,    binary=0),
-    dict(sc=lev,               sk=sk.levenshtein,    binary=2),
-    dict(sc=sc.dice,           sk=sk.dice,           binary=1),
-    dict(sc=sc.yule,           sk=sk.yule,           binary=1),
-    dict(sc=sc.jaccard,        sk=sk.jaccard,        binary=1),
-    dict(sc=sc.kulsinski,      sk=sk.kulsinski,      binary=1),
-    dict(sc=sc.rogerstanimoto, sk=sk.rogerstanimoto, binary=1),
-    dict(sc=sc.russellrao,     sk=sk.russellrao,     binary=1),
-    dict(sc=sc.sokalsneath,    sk=sk.sokalsneath,    binary=1),
-    dict(sc=sc.sokalmichener,  sk=sk.sokalmichener,  binary=1)
+    dict(sc=sc.cosine,         sk=sk.cosine,              binary=0),
+    dict(sc=sc.euclidean,      sk=sk.euclidean,           binary=0),
+    dict(sc=sc.correlation,    sk=sk.correlation,         binary=0),
+    dict(sc=sc.hamming,        sk=sk.hamming,             binary=0),
+    dict(sc=sc.canberra,       sk=sk.canberra,            binary=0),
+    dict(sc=sc.chebyshev,      sk=sk.chebyshev,           binary=0),
+    dict(sc=sc.braycurtis,     sk=sk.braycurtis,          binary=0),
+    dict(sc=sc.cityblock,      sk=sk.manhattan,           binary=0),
+    dict(sc=sc.sqeuclidean,    sk=sk.sqeuclidean,         binary=0),
+    dict(sc=lev,               sk=sk.levenshtein,         binary=2),
+    dict(sc=sc.dice,           sk=sk.dice,                binary=1),
+    dict(sc=sc.yule,           sk=sk.yule,                binary=1),
+    dict(sc=sc.jaccard,        sk=sk.jaccard,             binary=1),
+    dict(sc=sc.kulsinski,      sk=sk.kulsinski,           binary=1),
+    dict(sc=sc.rogerstanimoto, sk=sk.rogerstanimoto,      binary=1),
+    dict(sc=sc.russellrao,     sk=sk.russellrao,          binary=1),
+    dict(sc=sc.sokalsneath,    sk=sk.sokalsneath,         binary=1),
+    dict(sc=sc.sokalmichener,  sk=sk.sokalmichener,       binary=1)
 ]
 
 
@@ -61,7 +62,7 @@ def random_vector(binary=0):
         return np.random.randint(0, 2, (n_features,))
 
     elif binary == 2:
-        return str(''.join(random.choice(string.ascii_letters + string.digits) for _ in range(n_features)))
+        return str(''.join(random.choice(string.ascii_letters + string.digits) for _ in range(np.random.randint(1, n_features))))
 
 
 def test_equals(pairs):
@@ -130,7 +131,7 @@ def test_pdist(pairs):
 
         try:
 
-            if pairs["sc"] is not lev:
+            if pairs["sc"] not in [lev, dld]:
                 X = np.array([random_vector(pairs["binary"]) for _ in range(n_features)])
 
                 SC = sc.squareform(sc.pdist(X, pairs["sc"]))
@@ -146,7 +147,7 @@ def test_cdist(pairs):
 
         try:
 
-            if pairs["sc"] is not lev:
+            if pairs["sc"] not in [lev, dld]:
                 X = np.array([random_vector(pairs["binary"]) for _ in range(n_features)])
                 Y = np.array([random_vector(pairs["binary"]) for _ in range(n_features)])
 
