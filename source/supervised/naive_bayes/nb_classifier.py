@@ -29,7 +29,6 @@ class NBClassifier(object):
         self.likelihood_ = self._fit_likelihood(X, y)
         self.evidence_ = self._fit_evidence(X)
 
-
         return self
 
     def update(self, X, y):

@@ -1,46 +1,39 @@
 import numpy as np
 
-from utils.distances import PearsonCorrelation
+from utils.distances import correlation
 
 
 def accuracy(y, yhat):
-
     return np.mean(y == yhat)
 
 
-def MSE(yhat, y):
-
+def mse(yhat, y):
     return np.mean((y - yhat) ** 2)
 
 
-def RMSE(yhat, y):
-
+def rmse(yhat, y):
     return np.sqrt(MSE(y, yhat))
 
 
-def MAE(yhat, y):
-
+def mae(yhat, y):
     return np.mean(abs(y - yhat))
 
 
-def MSLE(yhat, y):
-
+def msle(yhat, y):
     return np.mean(np.square(np.log(y + np.ones_like(y)) - np.log(yhat + np.ones_like(yhat))))
 
 
-def MedAE(yhat, y):
-
+def med_a_e(yhat, y):
     return np.median(np.abs(y - yhat))
 
 
-def Rsquared(yhat, y):
-
+def rsquared(yhat, y):
     return 1 - (np.sum((y - yhat)**2) / np.sum((y - np.mean(y))**2))
 
 
-def BrierScore(f, o):
-
+def brier_score(f, o):
     return MSE(f, o)
+
 
 def entropy(x):
 
@@ -65,6 +58,7 @@ def confusion_matrix(output, target):
             matrix[(o, t)] = np.sum((target == t) & (output == o))
 
     return matrix
+
 
 def recall(output, target):
 
@@ -108,4 +102,3 @@ def f1_score(output, target):
     weighted_F1_score = np.sum([result[unique[u]] * counts[u] / len(target) for u in range(len(unique))])
 
     return weighted_F1_score, result
-
