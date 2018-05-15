@@ -15,7 +15,7 @@ def blobs(n_samples=100, n_features=2, centers=2, cluster_std=1.0,
 def classification_dataset(n_samples=100, n_features=2, n_informative=2, n_redundant=0, n_repeated=0, n_classes=2,
                            n_clusters_per_class=2, weights=None, flip_y=0.01, class_sep=1.0, hypercube=True, shift=0.0,
                            scale=1.0, shuffle=True, random_state=None):
-    
+
     X, y = sk_data.make_classification(n_samples=n_samples, n_features=n_features, n_informative=n_informative,
                                        n_redundant=n_redundant, n_repeated=n_repeated, n_classes=n_classes,
                                        n_clusters_per_class=n_clusters_per_class, weights=weights, flip_y=flip_y,
@@ -56,7 +56,7 @@ def tennis():
 
     df = pd.DataFrame(tennis, dtype='category')
     dfx = df[['Day', 'Outlook', 'Temperature', 'Humidity', 'Wind']]
-    dfy = df[['Day','PlayTennis']]
+    dfy = df[['Day', 'PlayTennis']]
     dfx.set_index('Day', inplace=True)
     dfy.set_index('Day', inplace=True)
 
