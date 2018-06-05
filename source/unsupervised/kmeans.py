@@ -18,18 +18,18 @@ class KMeans:
 
     def fit(self, X, y=None):
 
-        self.score_ = float('inf')  # initialize as worst possible performance/score
+        self.inertia_ = float('inf')  # initialize as worst possible inertia
 
         for run in range(self.n_runs):
 
             for c, l in self._fit(X, y):
                 centroids, labels = c, l
 
-            performance = self._performance(X, centroids, labels)
+            inertia = self._inertia(X, centroids, labels)
 
-            if performance < self.score_:
+            if inertia < self.inertia_:
 
-                self.score_ = performance
+                self.inertia_ = inertia
                 self.centroids_ = centroids
                 self.labels_ = labels
 
@@ -82,7 +82,7 @@ class KMeans:
 
         return np.array(labels)
 
-    def _performance(self, X, centroids, labels):
+    def _inertia(self, X, centroids, labels):
 
         distances = []
 
@@ -90,7 +90,7 @@ class KMeans:
 
             distances.extend([self._distance(x, centroid) for x in X[labels == i]])
 
-        return np.mean(np.power(distances, 2))
+        return np.sum(distances)
 
 if __name__ == "__main__":
 
@@ -101,19 +101,19 @@ if __name__ == "__main__":
 
     n_samples = 1000
 
-    X = []
-    for i in np.linspace(0, 1, np.sqrt(n_samples), dtype=np.float):
-        for j in np.linspace(0, 1, np.sqrt(n_samples), dtype=np.float):
-            X.append([i, j])
+    # X = []
+    # for i in np.linspace(0, 1, np.sqrt(n_samples), dtype=np.float):
+    #     for j in np.linspace(0, 1, np.sqrt(n_samples), dtype=np.float):
+    #         X.append([i, j])
 
-    X = np.array(X)
+    # X = np.array(X)
 
-    # X, _ = make_blobs(n_samples=100, n_features=2, centers=3)
+    X, _ = make_blobs(n_samples=n_samples, n_features=2, centers=3)
     # X = np.random.rand(n_samples, 2)
 
     kmeans = KMeans(k=3)
     colors = np.random.rand(kmeans.k, 3)
-    fig = plt.figure(figsize=(10,10))
+    fig = plt.figure(figsize=(10, 10))
 
     ax = fig.add_subplot(111)
 
@@ -133,5 +133,3 @@ if __name__ == "__main__":
     anim = animation.ArtistAnimation(fig, ims, interval=400, blit=True, repeat_delay=100)
     anim.save("kmeans.mp4")
     plt.show()
-
-
