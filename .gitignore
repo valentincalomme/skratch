@@ -2,3 +2,6 @@
 .cache/
 *__pycache__*
 *.ipynb
+*.png
+*.mp4
+*.gif
