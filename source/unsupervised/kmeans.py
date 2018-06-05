@@ -51,8 +51,9 @@ class KMeans:
 
     def _initialize_centroids(self, X):
 
-        self.rnd.shuffle(X.copy())
-        return X[:self.k]
+        X_ = X.copy()
+        self.rnd.shuffle(X_)
+        return X_[:self.k]
 
     def _distance(self, a, b):
 
@@ -98,12 +99,21 @@ if __name__ == "__main__":
     import matplotlib.animation as animation
     from sklearn.datasets import make_blobs
 
-    # X, _ = make_blobs(n_samples=1000, n_features=2, centers=5)
-    X = np.random.rand(1000, 2)
+    n_samples = 1000
+
+    X = []
+    for i in np.linspace(0, 1, np.sqrt(n_samples), dtype=np.float):
+        for j in np.linspace(0, 1, np.sqrt(n_samples), dtype=np.float):
+            X.append([i, j])
+
+    X = np.array(X)
+
+    # X, _ = make_blobs(n_samples=100, n_features=2, centers=3)
+    # X = np.random.rand(n_samples, 2)
 
     kmeans = KMeans(k=3)
     colors = np.random.rand(kmeans.k, 3)
-    fig = plt.figure()
+    fig = plt.figure(figsize=(10,10))
 
     ax = fig.add_subplot(111)
 
@@ -115,10 +125,13 @@ if __name__ == "__main__":
 
         for i in range(kmeans.k):
 
-            line, = ax.plot(X[l == i][:, 0], X[l == i][:, 1], '.', c=colors[i])
+            line, = ax.plot(X[l == i][:, 0], X[l == i][:, 1], '.', c=colors[i], ms=30)
 
-        line, = ax.plot(c[:, 0], c[:, 1], 'X', c='black', ms=10)
+        line, = ax.plot(c[:, 0], c[:, 1], 'o', c='black', ms=30)
         ims.append(ax.lines[-(kmeans.k + 1):])
 
-    anim = animation.ArtistAnimation(fig, ims, interval=200, blit=True, repeat_delay=100)
+    anim = animation.ArtistAnimation(fig, ims, interval=400, blit=True, repeat_delay=100)
+    anim.save("kmeans.mp4")
     plt.show()
+
+
