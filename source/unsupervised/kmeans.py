@@ -12,6 +12,10 @@ class KMeans:
         self.rnd = np.random.RandomState(seed)
         self.n_runs = n_runs
 
+    def _distance(self, a, b):
+
+        return euclidean(a, b)
+        
     def predict(self, X):
 
         return self._compute_labels(X, self.centroids_)
@@ -54,10 +58,6 @@ class KMeans:
         X_ = X.copy()
         self.rnd.shuffle(X_)
         return X_[:self.k]
-
-    def _distance(self, a, b):
-
-        return euclidean(a, b)
 
     def _compute_centroids(self, X, labels):
 
@@ -108,7 +108,9 @@ if __name__ == "__main__":
 
     # X = np.array(X)
 
-    X, _ = make_blobs(n_samples=n_samples, n_features=2, centers=3)
+    # X, _ = make_blobs(n_samples=n_samples, n_features=2, centers=3)
+
+    X, _ = noisy_moons 
     # X = np.random.rand(n_samples, 2)
 
     kmeans = KMeans(k=3)
