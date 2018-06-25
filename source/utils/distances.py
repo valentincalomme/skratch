@@ -207,36 +207,11 @@ def levenshtein(x, y):
 
     for i in range(1, matrix.shape[0]):
         for j in range(1, matrix.shape[1]):
-            
+
             cost = 1 - (x[i - 1] == y[j - 1])
 
             matrix[i, j] = min(matrix[i - 1, j - 1] + cost,
                                matrix[i - 1, j] + 1,
                                matrix[i, j - 1] + 1)
-
 
     return matrix[len(x), len(y)]
-
-
-def restricted_levenshtein(x, y):
-
-    # Computes matrix
-    matrix = np.zeros((len(x) + 1, len(y) + 1))
-    matrix[:, 0] = np.array([i for i in range(len(x) + 1)])
-    matrix[0, :] = np.array([i for i in range(len(y) + 1)])
-
-    for i in range(1, len(x) + 1):
-        for j in range(1, len(y) + 1):
-
-            cost = 1 - (x[i - 1] == y[j - 1])
-
-            matrix[i, j] = min(matrix[i - 1, j - 1] + cost,
-                               matrix[i - 1, j] + 1,
-                               matrix[i, j - 1] + 1)
-
-            if i > 1 and j > 1:
-                if x[i -1] == y[j - 2] and x[i - 2] == y[j - 1]:
-                    matrix[i, j] = min(matrix[i, j],
-                                       matrix[i - 2, j - 2] + cost)
-
-    return matrix[len(x) - 1, len(y) - 1]

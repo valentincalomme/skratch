@@ -9,7 +9,6 @@ import string
 import scipy.spatial.distance as sc  # sc for scipy
 import utils.distances as sk  # sk for skratch
 from weighted_levenshtein import lev
-from pyxdameraulevenshtein import damerau_levenshtein_distance as dld
 import numpy as np
 
 np.seterr(divide='ignore', invalid='ignore')
