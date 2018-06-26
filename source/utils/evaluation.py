@@ -1,6 +1,21 @@
 import numpy as np
 
 from utils.distances import correlation
+from itertools import combinations
+
+
+def adjusted_rand_score(X, Y):
+
+    a = b = c = d = 0
+
+    for i, j in combinations(range(len(X)), 2):
+
+        a += X[i] == X[j] and Y[i] == Y[j]
+        b += X[i] != X[j] and Y[i] != Y[j]
+        c += X[i] == X[j] and Y[i] != Y[j]
+        d += X[i] != X[j] and Y[i] == Y[j]
+
+    return (a + b) / (a + b + c + d)
 
 
 def accuracy(y, yhat):
