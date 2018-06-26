@@ -1,13 +1,28 @@
+import collections
 from itertools import product
 
 import numpy as np
-np.seterr(divide='ignore', invalid='ignore')
-
-
-import collections
 
 
 def pdist(samples, distance):
+    """Pairwise distance between n-dimensional samples
+
+    Computes the pairwise distances between n-dimensional samples. This implementation has been tested against
+    scipy.spatial.distance.pdist to ensure its correctness.
+
+    Parameters
+    ----------
+    samples : iterable
+        2D array (n_samples x n_features)
+
+    distance : callable
+        function computing the distance between two samples
+
+    Returns
+    -------
+    2D matrix
+        distance matrix where position i,j represents the distance between sample i and sample j
+    """
 
     distances = np.empty((len(samples), len(samples)))
 
@@ -17,12 +32,30 @@ def pdist(samples, distance):
             dist = distance(a, b)
 
             distances[i, j] = dist
-            distances[j, i] = dist
+            distances[j, i] = dist  # distances are assumed to be symmetrical
 
     return distances
 
 
 def cdist(A, B, distance):
+    """Pairwise distances between elements of two sets of n-dimensional samples
+
+    This implementation has been tested against scipy.spatial.distance.cdist to ensure its correctness.
+
+    Parameters
+    ----------
+    A : iterable
+        2D array (n_samples x n_features)
+    B :  iterable
+        2D array (n_samples x n_features)
+    distance : callable
+        function computing the distance between two samples
+
+    Returns
+    -------
+    2D matrix
+        distance matrix where position i,j represents the distance between sample i of set A and sample j of set B
+    """
 
     distances = np.empty((len(A), len(B)))
 
