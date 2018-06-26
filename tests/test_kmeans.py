@@ -6,7 +6,7 @@ import numpy as np
 from sklearn.cluster import KMeans as sklearn_KMeans
 from unsupervised.kmeans import KMeans as skratch_KMeans
 
-from data.clustering import noisy_moons_, noisy_circles_, aniso_, varied_, no_structure_, blobs_, blobs
+from datasets.clustering import noisy_moons_, noisy_circles_, aniso_, varied_, no_structure_, blobs_, blobs
 from utils.evaluation import adjusted_rand_score
 
 EPSILON = 0.1
