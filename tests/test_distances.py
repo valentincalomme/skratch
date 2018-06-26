@@ -130,7 +130,7 @@ def test_pdist(pairs):
 
         try:
 
-            if pairs["sc"] not in [lev, dld]:
+            if pairs["sc"] not in [lev]:
                 X = np.array([random_vector(pairs["binary"]) for _ in range(n_features)])
 
                 SC = sc.squareform(sc.pdist(X, pairs["sc"]))
@@ -146,7 +146,7 @@ def test_cdist(pairs):
 
         try:
 
-            if pairs["sc"] not in [lev, dld]:
+            if pairs["sc"] not in [lev]:
                 X = np.array([random_vector(pairs["binary"]) for _ in range(n_features)])
                 Y = np.array([random_vector(pairs["binary"]) for _ in range(n_features)])
 
