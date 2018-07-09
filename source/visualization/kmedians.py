@@ -5,13 +5,15 @@ import matplotlib.animation as animation
 from unsupervised.kmedians import KMedians
 from datasets.clustering import blobs, noisy_moons_
 
-n_samples = 1000
+n_samples = 2000
+k = 4
 
 # X = blobs(n_samples=n_samples, n_features=2, centers=3)
 # X, _ = noisy_moons_
 X = np.random.rand(n_samples, 2)
 
-kmedians = KMedians(k=3)
+
+kmedians = KMedians(k=k)
 colors = np.random.rand(kmedians.k, 3)
 fig = plt.figure(figsize=(10, 10))
 

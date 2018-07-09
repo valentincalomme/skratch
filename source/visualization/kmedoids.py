@@ -4,14 +4,16 @@ import matplotlib.animation as animation
 
 from unsupervised.kmedoids import KMedoids
 from datasets.clustering import blobs, noisy_moons_
+from utils.distances import pdist, euclidean, manhattan, cosine
 
 n_samples = 1000
+k = 4
 
 # X = blobs(n_samples=n_samples, n_features=2, centers=3)
-# X, _ = noisy_moons_
-X = np.random.rand(n_samples, 2)
+X, _ = noisy_moons_
+# X = np.random.rand(n_samples, 2)
 
-kmedoids = KMedoids(k=3)
+kmedoids = KMedoids(k=4)
 colors = np.random.rand(kmedoids.k, 3)
 fig = plt.figure(figsize=(10, 10))
 
