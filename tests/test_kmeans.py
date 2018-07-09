@@ -9,15 +9,7 @@ from unsupervised.kmeans import KMeans as skratch_KMeans
 from datasets.clustering import noisy_moons_, noisy_circles_, aniso_, varied_, no_structure_, blobs_, blobs
 from utils.evaluation import adjusted_rand_score
 
-EPSILON = 0.1
-
-
-# DATASETS = [noisy_moons_,
-#             noisy_circles_,
-#             aniso_,
-#             varied_,
-#             no_structure_,
-#             blobs_]
+EPSILON = 1E-1
 
 DATASETS = [np.random.rand(100, n_feature) for n_feature in range(2, 6)]
 KS = range(2, 8)
@@ -36,7 +28,7 @@ def test_kmeans_vs_sklearn(k):
     X = skr.fit(dataset).predict(dataset)
     Y = skl.fit(dataset).predict(dataset)
 
-    assert adjusted_rand_score(X, Y) > 1 - EPSILON
+    assert adjusted_rand_score(X, Y) >= 1 - EPSILON
 
 
 @pytest.mark.parametrize("k, seed", itertools.product(KS, range(4)))
