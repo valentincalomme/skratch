@@ -1,7 +1,6 @@
-*.sublime*
-.cache/
-*__pycache__*
-*.ipynb
-*.png
-*.mp4
-*.gif
+**.sublime*
+**__pycache__
+source/visualization/images/
+source/visualization/gif/
+**.cache/
+**.ipynb_checkpoints
