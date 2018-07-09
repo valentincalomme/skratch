@@ -14,14 +14,16 @@ class GaussianNB(NBClassifier):
 
     def _fit_likelihood(self, X, y):
 
-        likelihood_ = {}
+        likelihood_ = []
 
         for c in self.classes_:
             samples = X[y == c]
 
-            likelihood_[c] = [dict(mean=np.mean(feature),
-                                   std=np.std(feature, ddof=1),
-                                   n=len(feature)) for feature in samples.T]
+            feature_likelihood_ = [dict(mean=np.mean(feature),
+                                        std=np.std(feature, ddof=1),
+                                        n=len(feature)) for feature in samples.transpose()]
+
+            likelihood_.append(feature_likelihood_)
 
         return likelihood_
 
@@ -42,12 +44,12 @@ class GaussianNB(NBClassifier):
 
         likelihoods = {}
 
-        for c in enumerate(self.classes_):
+        for i, c in enumerate(self.classes_):
 
             feature_probas = []
             samples = X[y == c]
 
-            for i, x in enumerate(samples.T):
+            for i, x in enumerate(samples.transpose()):
 
                 old_m = self.likelihood_[c][i]["mean"]
                 old_std = self.likelihood_[c][i]["std"]
@@ -68,7 +70,7 @@ class GaussianNB(NBClassifier):
 
         feature_probas = []
 
-        for feature in X.T:
+        for feature in X.transpose():
 
             m = np.mean(feature)
             n = len(feature)
@@ -80,7 +82,7 @@ class GaussianNB(NBClassifier):
 
     def _update_evidence(self, X):
 
-        for i, feature in enumerate(X.T):
+        for i, feature in enumerate(X.transpose()):
 
             old_m = self.evidence_[i]["mean"]
             old_std = self.evidence_[i]["std"]
