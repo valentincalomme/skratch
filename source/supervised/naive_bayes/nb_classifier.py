@@ -41,26 +41,17 @@ class NBClassifier(object):
 
     def _fit_prior(self, y):
 
-        self.classes_, counts = np.unique(y, return_counts=True)
-        total_count = np.sum(counts)
+        self.classes_, self.priors_ = np.unique(y, return_counts=True)
 
-        return {c: dict(count=counts[i], total_count=total_count) for i, c in enumerate(self.classes_)}
-
-    def _get_prior(self, c):
-
-        count = self.priors_[c]["count"]
-        total_count = self.priors_[c]["total_count"]
-
-        return count / total_count
+        return self.priors_
 
     def _update_priors(self, y):
 
         self.classes_, counts = np.unique(y, return_counts=True)
-        total_count = np.sum(counts)
-
-        for i, c in enumerate(self.classes_):
-
-            self.priors_[c]["count"] += counts[i]
-            self.priors_[c]["total_count"] += total_count
+        self.priors_ += counts
 
         return self.priors_
+
+    def _get_prior(self, c):
+
+        return self.priors_[c] / np.sum(self.priors_)

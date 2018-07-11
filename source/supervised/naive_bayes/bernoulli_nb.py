@@ -11,11 +11,41 @@ class BernoulliNB(NBClassifier):
 
     def _fit_evidence(self, X):
 
-        feature_probas = [(dict(count=np.sum(feature),
-                                n=len(feature)))
-                          for feature in X.transpose()]
+        feature_probas = [dict(count=np.sum(feature), n=len(feature)) for feature in X.T]
 
         return np.array(feature_probas)
+
+    def _fit_likelihood(self, X, y):
+
+        likelihood_ = []
+
+        for c in self.classes_:
+            samples = X[y == c]
+
+            likelihood_.append(self._fit_evidence(samples))
+
+        return likelihood_
+
+    def _update_evidence(self, X):
+
+        for i, feature in enumerate(X.T):
+
+            self.evidence[i]["count"] += np.sum(feature)
+            self.evidence[i]["n"] += len(feature)
+
+        return self.evidence_
+
+    def _update_likelihood(self, X, y):
+
+        for i, c in enumerate(self.classes_):
+            samples = X[y == c]
+
+            for i, feature in enumerate(samples.T):
+
+                self.likelihood_[c][i]["count"] += np.sum(feature)
+                self.likelihood_[c][i]["n"] += len(feature)
+
+        return self.likelihood_
 
     def _get_evidence(self, sample):
 
@@ -26,52 +56,9 @@ class BernoulliNB(NBClassifier):
             count = self.evidence_[i]["count"]
             n = self.evidence_[i]["n"]
 
-            evidence += self._pdf(x=feature, p=count / n)
+            evidence *= self._pdf(x=feature, p=count / n)
 
         return evidence
-
-    def _update_evidence(self, X):
-
-        for i, feature in enumerate(X.transpose()):
-
-            count = self.evidence[i]["count"] + np.sum(feature)
-            n = self.evidence[i]["n"] + len(feature)
-
-            self.evidence_[i] = dict(count=count, n=n)
-
-        return self.evidence_
-
-    def _fit_likelihood(self, X, y):
-
-        likelihood_ = []
-
-        for c in self.classes_:
-
-            samples = X[y == c]
-
-            feature_likelihood_ = [dict(count=np.sum(feature),
-                                        n=len(feature))
-                                   for feature in samples.transpose()]
-
-            likelihood_.append(feature_likelihood_)
-
-        return likelihood_
-
-    def _update_likelihood(self, X, y):
-
-        likelihoods = {}
-
-        for i, c in enumerate(self.classes_):
-            samples = X[y == c]
-
-            for i, feature in enumerate(samples.transpose()):
-
-                count = self.evidence[i]["count"] + np.sum(feature)
-                n = self.evidence[i]["n"] + len(feature)
-
-                self.likelihood_[c][i] = dict(count=count, n=n)
-
-        return self.likelihood_
 
     def _get_likelihood(self, sample, c):
 
