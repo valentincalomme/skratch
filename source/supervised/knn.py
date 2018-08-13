@@ -4,15 +4,15 @@ from collections import Counter
 
 import numpy as np
 
-from utils.distances import euclidean, cdist
+from utils.distances import euclidean
 
 
 class KNN:
 
-    def __init__(self, k=1, weighted=False):
+    def __init__(self, k, weighted=False):
 
         self.k = k
-        self.weighted = weighted
+        self.weighted = weighted  # Whether or not to use weighted distances
 
     def fit(self, X, y):
 
@@ -23,8 +23,8 @@ class KNN:
 
     def update(self, X, y):
 
-        self.X_ = np.concatenate((self.X_, X))
-        self.y_ = np.concatenate((self.y_, y))
+        self.X_ = np.concatenate((self.X_, X))  # append new data to the already existing data
+        self.y_ = np.concatenate((self.y_, y))  # append new data to the already existing data
 
         return self
 
@@ -36,7 +36,7 @@ class KNN:
 
             neighbours, distances = self._get_neighbours(x)
 
-            prediction = self._vote(neighbours, distances)
+            prediction = self._vote(neighbours, distances)  # Make a prediction
 
             predictions.append(prediction)
 
@@ -45,7 +45,7 @@ class KNN:
     def _get_neighbours(self, x):
 
         distances = np.array([self._distance(x, x_) for x_ in self.X_])
-        indices = np.argsort(distances)[:self.k]
+        indices = np.argsort(distances)[:self.k]  # keep the indices of the k-nearest neighbours
 
         return self.y_[indices], distances[indices]
 
@@ -55,18 +55,15 @@ class KNN:
 
     def _get_weights(self, distances):
 
-        weights = np.ones_like(distances, dtype=float)
+        weights = np.ones_like(distances, dtype=float)  # By default, all neighbours are uniformly weighted
 
         if self.weighted:
             if any(distances == 0):
-                weights[distances != 0] = 0
+                weights[distances != 0] = 0  # if some neighbours have distance 0, their weight is 1, and others' is 0
             else:
-                weights /= distances
+                weights /= distances  # each weight equal 1/distance (the shorter the distance, the bigger the weight)
 
         return weights
-
-    def _vote(self, targets, distances):
-        raise NotImplementedError("KNN requires a _vote function")
 
 
 class KNN_Classifier(KNN):
@@ -75,9 +72,19 @@ class KNN_Classifier(KNN):
 
         weights = self._get_weights(distances)
 
-        weighted_frequencies = {c: np.sum(weights[classes == c]) for c in list(set(classes))}
+        prediction = None
+        max_weighted_frequency = 0
 
-        return max(classes, key=weighted_frequencies.get)
+        for c in classes:
+
+            weighted_frequency = np.sum(weights[classes == c])
+
+            if weighted_frequency > max_weighted_frequency:
+
+                prediction = c
+                max_weighted_frequency = weighted_frequency
+
+        return prediction
 
 
 class KNN_Regressor(KNN):

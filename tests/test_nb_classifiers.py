@@ -17,7 +17,7 @@ N = 100
 ######################################################################
 
 
-from supervised.naive_bayes.gaussian_nb import GaussianNB
+from supervised.gaussian_nb import GaussianNB
 from sklearn.naive_bayes import GaussianNB as sklearn_gnb
 
 
@@ -70,7 +70,7 @@ def test_gaussian_pdf(x, loc, scale):
 ######################################################################
 
 
-from supervised.naive_bayes.bernoulli_nb import BernoulliNB
+from supervised.bernoulli_nb import BernoulliNB
 from sklearn.naive_bayes import BernoulliNB as sklearn_BernoulliNB
 
 
@@ -122,7 +122,7 @@ def test_bernoulli_pdf(x, p):
 ######################################################################
 ######################################################################
 
-from supervised.naive_bayes.multinomial_nb import MultinomialNB
+from supervised.multinomial_nb import MultinomialNB
 from sklearn.naive_bayes import MultinomialNB as sklearn_MultinomialNB
 
 n = 10
