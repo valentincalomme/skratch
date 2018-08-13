@@ -4,7 +4,7 @@ from collections import Counter
 import scipy.stats as ss
 import numpy as np
 
-from supervised.naive_bayes.nb_classifier import NBClassifier
+from supervised.nb_classifier import NBClassifier
 
 
 class MultinomialNB(NBClassifier):
@@ -34,7 +34,7 @@ class MultinomialNB(NBClassifier):
         likelihood_ = []
 
         for c in self.classes_:
-            samples = X[y == c]
+            samples = X[y == c]   # only keep samples of class c
 
             likelihood_.append(self._fit_evidence(samples))
 
@@ -49,7 +49,7 @@ class MultinomialNB(NBClassifier):
     def _update_likelihood(self, X, y):
 
         for i, c in enumerate(self.classes_):
-            samples = X[y == c]
+            samples = X[y == c]   # only keep samples of class c
 
             self.likelihood_[i] += np.sum(samples, axis=0)
 

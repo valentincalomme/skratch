@@ -1,6 +1,6 @@
 import numpy as np
 
-from supervised.naive_bayes.nb_classifier import NBClassifier
+from supervised.nb_classifier import NBClassifier
 
 
 class BernoulliNB(NBClassifier):
@@ -11,7 +11,12 @@ class BernoulliNB(NBClassifier):
 
     def _fit_evidence(self, X):
 
-        feature_probas = [dict(count=np.sum(feature), n=len(feature)) for feature in X.T]
+        feature_probas = []
+
+        for feature in X.T:  # take the transpose to iterate through the features instead of the samples
+
+            feature_probas.append(dict(count=len(feature[feature == 1]),
+                                       n=len(feature)))
 
         return np.array(feature_probas)
 
@@ -20,7 +25,8 @@ class BernoulliNB(NBClassifier):
         likelihood_ = []
 
         for c in self.classes_:
-            samples = X[y == c]
+
+            samples = X[y == c]  # only keep samples of class c
 
             likelihood_.append(self._fit_evidence(samples))
 
@@ -28,9 +34,9 @@ class BernoulliNB(NBClassifier):
 
     def _update_evidence(self, X):
 
-        for i, feature in enumerate(X.T):
+        for i, feature in enumerate(X.T):  # take the transpose to iterate through the features instead of the samples
 
-            self.evidence[i]["count"] += np.sum(feature)
+            self.evidence[i]["count"] += len(feature[feature == 1])
             self.evidence[i]["n"] += len(feature)
 
         return self.evidence_
@@ -38,11 +44,12 @@ class BernoulliNB(NBClassifier):
     def _update_likelihood(self, X, y):
 
         for i, c in enumerate(self.classes_):
-            samples = X[y == c]
 
-            for i, feature in enumerate(samples.T):
+            samples = X[y == c]  # only keep samples of class c
 
-                self.likelihood_[c][i]["count"] += np.sum(feature)
+            for i, feature in enumerate(samples.T):  # take the transpose to iterate through the features instead of the samples
+
+                self.likelihood_[c][i]["count"] += len(feature[feature == 1])
                 self.likelihood_[c][i]["n"] += len(feature)
 
         return self.likelihood_

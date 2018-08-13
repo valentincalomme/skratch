@@ -1,6 +1,6 @@
 import numpy as np
 
-from supervised.naive_bayes.nb_classifier import NBClassifier
+from supervised.nb_classifier import NBClassifier
 
 EPSILON = 1E-16  # offset to avoid "divide by zero" errors
 
@@ -18,7 +18,8 @@ class GaussianNB(NBClassifier):
 
         feature_probas = []
 
-        for feature in X.T:
+        for feature in X.T:  # take the transpose to iterate through the features instead of the samples
+
             feature_probas.append(dict(mean=np.mean(feature),
                                        n=len(feature),
                                        std=np.std(feature, ddof=1)))
@@ -30,7 +31,8 @@ class GaussianNB(NBClassifier):
         likelihood_ = []
 
         for c in self.classes_:
-            samples = X[y == c]
+
+            samples = X[y == c]  # only keep samples of class c
 
             likelihood_.append(self._fit_evidence(samples))
 
@@ -38,7 +40,8 @@ class GaussianNB(NBClassifier):
 
     def _update_evidence(self, X):
 
-        for i, feature in enumerate(X.T):
+        for i, feature in enumerate(X.T):   # take the transpose to iterate through the features instead of the samples
+
             self.evidence_[i] = self._update_mean_std_n(feature, self.evidence_[i])
 
         return self.evidence_
@@ -46,9 +49,11 @@ class GaussianNB(NBClassifier):
     def _update_likelihood(self, X, y):
 
         for c in self.classes_:
-            samples = X[y == c]
 
-            for i, feature in enumerate(samples.T):
+            samples = X[y == c]  # only keep samples of class c
+
+            for i, feature in enumerate(samples.T):  # take the transpose to iterate through the features instead of the samples
+
                 self.likelihood_[c][i] = self._update_mean_std_n(feature, self.likelihood_[c][i])
 
         return self.likelihood_
