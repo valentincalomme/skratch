@@ -1,19 +1,66 @@
 # Skratch
 
-Machine learning is a combination of statistics, computer science, linear algebra, information theory, and other topics, which can make it a difficult topic to learn. Because of this, and the abundance of libraries, packages or even cloud solutions, learning how models actually work is not very tempting. This leads to an increasing amount of people who use models but do not necessarily understand how they work.
+## About
 
-Understanding how models work can be extremely useful. It can save a lot of time when choosing models or hyperparameters. And it can be of great help when trying to understand why a model performs the way it does, ultimately helping you to come up with a better solution. However, most learning resources are either too technical, making them unattractive to most people, or they are too high-level and do not provide deep enough explanations of the material.
+### Machine Learning from Skratch
 
-Skratch is there to try to fill that gap.
+Machine Learning combines statistics, linear algebra, information theory, and computer science. It is, therefore, a complex field to learn. Nowadays, there exist many machine learning libraries, online services, or frameworks which allow virtually anyone to train machine learning models. Because of this, no one really needs to know how to build models from scratch. However, regardless of unattractive, it may be, understanding the inner workings of machine learning can make a huge difference. It can help pick an appropriate model, sensibly process the data, or make custom adjustments.
 
-## What makes Skratch different?
+### Finding a balance
 
-Skratch's philosophy is that to truly understand something, you must first break it down into atomic steps. This is why it was decided to implement machine learning algorithms from scratch and use the code as a learning tool. This way, we can truly show what is happening under the hood. Also, we often don't realize how many things we don't fully understand about a topic until we have to explain it ourselves. Implementing algorithms from scratch ensures that we must understand every step.
+There exist many great learning resources out there. However, they either delve deeply into theory and complex mathematics, or they never go further than high-level intuitions. Skratch’s goal is to be somewhere in the middle. In this online course, the goal is to break down machine learning concepts to their core, and show to build them back up. This is 
 
-As explained above, Skratch is trying to fill a gap between "too technical" and "too high-level". This means that we won't delve deeply into statistics. If necessary, we will provide relevant links to other resources. On the other hand, we do not want to be too high-level and we believe that showing each step of an algorithm through code can achieve that.
+### Python code
 
-Skratch does not pretend to be the only useful learning resource out there. It is the complete opposite. There exist many incredible resources about machine learning, and we would simply like to add another one to the list. We understand that everyone learns differently, and that perhaps, one explanation can make things click for one person but not for the other. We hope that by offering a different way to learn machine learning, we can make things click for more people.
+Python was picked because of its readability and popularity in the machine learning community. However, the code was not written to be language-specific and it can be useful for people who use other languages. The code is documented and follows the scikit-learn interface and naming conventions as much as possible. In order to ensure that the implementations are correct, tests were written to compare the models to the ones from scikit-learn. The code can be found on Github and is fully open-source.
 
-## Who is it for?
+### Visualizations
 
-Skratch is for anyone who is interested in machine learning, and especially those who like to build things themselves. Because it has a high focus on code, it might be too technical for some, and because it doesn't go deeply into statistics, it might be too high-level for some. We strive to find a balance between the two sides. Even though the code is written in Python, it doesn't mean that it isn't useful for people who use different languages. Python was used for its readability and the code was written trying not to be too "Pythonic".
+Understanding a topic typically starts with some intuition. This is why Skratch illustrates machine concepts with visualizations. Whether they are images or animations. And to stay in the spirit of implementing things from Skratch, clicking on every visualization in a learning unit will direct you to the piece of code that generated it. This way, it is possible to play around and create different visualizations. Matplotlib was the library that was chosen because of its simplicity and popularity.
+
+### Blogs, videos, Jupyter notebooks
+
+Everyone learns differently. Some may prefer reading a textbook, some may prefer attending a lecture. Because of this, we tried to provide material in as many formats as possible. First and foremost, the Github repository is there to provide all of the source code and the tests. Each learning unit is also provided as a Jupyter Notebook. This way, the code involved in a unit can be run right in the browser. On top of regular learning units, you’ll also find blogs discussing machine learning topics. Topics vary from intuition on some theoretical concept, to opinion pieces about the ethical implications of machine learning.
+
+### Useful Resources
+
+Skratch is not the single learning resource when it comes to machine learning, nor is it trying to be. Everyone learns in different ways and there already exist plenty of great resources out there to learn machine learning. This is why in each learning unit, other useful resources on the topic will be topic. On a more general note, useful resources such as podcasts, academic papers, or online courses are provided.
+
+### Open-source and for everyone
+
+Skratch is and will remain a work in progress. And in order to improve, any and all remarks or suggestions are welcome. The code is fully open-source and so anyone can reuse it or contribute to it. Regarding the website, feel free to use the contact page in order to get in touch with me. Skratch is for anyone who is interested in machine learning, and especially those who like to build things themselves. Skratch is trying to fill a gap between “too technical” and “too high-level”. This means that it won’t delve deeply into statistics. If necessary, it will provide relevant links to other resources.
+
+
+## Who am I?
+
+<img src="https://skratch.valentincalomme.com/wp-content/uploads/2018/06/32150822_10216105769666832_3159846691373318144_n.jpg" width="200" align="right"/>
+
+My name is Valentin and I originally come from Belgium. I lived in the United States for a bit and then I went to Maastricht University to study data science. I now work as a data scientist, which means that I am able to fully embrace my passion for machine learning on a daily basis. I am passionate about teaching and really believe that you cannot master a topic until you are able to explain it to others. This is one of the many reasons I decided to start this website. On one hand, I wanted to spread good resources about machine learning, and on the other, I wanted to further my education on the topic. This website is and will remain a work in progress. I welcome any criticism, suggestions, and even contributions to the project with open arms.
+
+## FAQ
+
+### Can I reuse the code?
+
+Yes, the project is 100% open-source. Feel free to use, modify, or even contribute to the codebase. Do remember though that the code was not written to be robust or fast.
+
+### How did you create the images/GIFs?
+
+I used Matplotlib, a famous Python library. If you click on each image or gif, it will send you to a Python file used to generate the figure! The code can also be found directly on Github.
+
+### How do I get in touch with you if I have questions?
+
+You can make use of the contact page, send an e-mail to skratch@valentincalomme.com, or even find me on LinkedIn!
+
+### How do I know the implementations are correct?
+
+Skratch aims to be as transparent as possible. It is why we wrote tests for the various machine learning models, ensuring that they perform similarly to sklearn models.
+
+### I don't know Python, is it a problem?
+
+No! Even though the code was written in Python, it is not language specific. You might need some basic understanding about Python syntax but that’s it!
+
+### How much statistics do I need to know?
+
+Statistics are a vital part of machine learning, and I can’t ever recommend to learn it enough. However, this course is not necessarily focused on statistics, so basic knowledge should be plenty!
+
+
