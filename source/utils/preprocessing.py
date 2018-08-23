@@ -6,7 +6,65 @@ import numpy as np
 EPSILON = 1E-16
 
 
-class Normalizer:
+class Transformer():
+
+    def fit_transform(self, X):
+
+        return self.fit(X).transform(X)
+
+
+class LabelBinarizer(Transformer):
+
+    def fit(self, y):
+
+        self.classes_ = np.unique(y)
+
+        return self
+
+    def transform(self, y):
+
+        Y = np.array([self.classes_ == y_ for y_ in y], dtype=np.int)
+
+        if len(self.classes_) == 1:
+            Y = np.array([[0] for y_ in Y])
+
+        elif len(self.classes_) == 2:
+            Y = np.array([[np.argmax(y_)] for y_ in Y])
+
+        return Y
+
+    def inverse_transform(self, Y):
+
+        if len(self.classes_) <= 2:
+            y = np.array([self.classes_[y_[0]] for y_ in Y])
+        else:
+            y = np.array([self.classes_[np.argmax(y_)] for y_ in Y])
+
+        return y
+
+
+class LabelEncoder(Transformer):
+
+    def fit(self, y):
+
+        self.classes_ = np.unique(y)
+
+        return self
+
+    def transform(self, y):
+
+        Y = np.array([np.argmax(self.classes_ == y_) for y_ in y])
+
+        return Y
+
+    def inverse_transform(self, Y):
+
+        y = np.array([self.classes_[y_] for y_ in Y])
+
+        return y
+
+
+class Normalizer(Transformer):
 
     def __init__(self, norm="l2"):
 
@@ -33,12 +91,8 @@ class Normalizer:
 
         return X / self.norm
 
-    def fit_transform(self, X):
 
-        return self.fit(X).transform(X)
-
-
-class StandardScaler:
+class StandardScaler(Transformer):
 
     def __init__(self, with_mean=True, with_std=True):
 
@@ -67,12 +121,8 @@ class StandardScaler:
 
         return X
 
-    def fit_transform(self, X):
 
-        return self.fit(X).transform(X)
-
-
-class MinMaxScaler:
+class MinMaxScaler(Transformer):
 
     def __init__(self, feature_range=(0, 1)):
 
@@ -94,12 +144,8 @@ class MinMaxScaler:
 
         return X
 
-    def fit_transform(self, X):
 
-        return self.fit(X).transform(X)
-
-
-class MaxAbsScaler:
+class MaxAbsScaler(Transformer):
 
     def fit(self, X):
 
@@ -112,10 +158,6 @@ class MaxAbsScaler:
         X = copy.copy(X)
 
         return np.divide(X, self.abs_max)
-
-    def fit_transform(self, X):
-
-        return self.fit(X).transform(X)
 
 
 def polynomial_features(X, degree=1):

@@ -1,9 +1,9 @@
 import numpy as np
 
 
-def numerical_gradient(f):
+def numerical_gradient(f, wrt=None):
 
-    def _gradient(x, wrt=None):
+    def gradient(x, wrt):
 
         h = 1E-8
 
@@ -20,23 +20,42 @@ def numerical_gradient(f):
 
         return gradients
 
-    return _gradient
+    return lambda x: gradient(x, wrt)
 
 
-class GradientDescentOptimizer:
+class StochasticGradientDescentOptimizer:
 
     def __init__(self, learning_rate=0.2, momentum=0):
 
         self.momentum = momentum
         self.learning_rate = learning_rate
+        self.parameter_update = None
 
-        self.weight_update = None
+    def step(self, parameters, gradient):
 
-    def update(self, x, grad):
+        if self.parameter_update is None:
+            self.parameter_update = np.zeros(len(parameters))
 
-        if self.weight_update is None:
-            self.weight_update = np.zeros(len(x))
+        self.parameter_update = self.momentum * self.parameter_update + (1 - self.momentum) * gradient(parameters)
 
-        self.weight_update = self.momentum * self.weight_update + (1 - self.momentum) * grad
+        return parameters - self.learning_rate * self.parameter_update
 
-        return x - self.learning_rate * self.weight_update
+
+class NesterovAcceleratedGradientOptimizer:
+
+    def __init__(self, learning_rate=0.001, momentum=0.4):
+
+        self.learning_rate = learning_rate
+        self.momentum = momentum
+        self.parameter_update = None
+
+    def step(self, parameters, gradient):
+
+        if self.parameter_update is None:
+            self.parameter_update = np.zeros(len(parameters))
+
+        approximate_future_gradient = np.clip(gradient(parameters - self.momentum * self.parameter_update), -1, 1)
+
+        self.parameter_update = self.momentum * self.parameter_update + self.learning_rate * approximate_future_gradient
+
+        return parameters - self.parameter_update

@@ -2,10 +2,13 @@ import numpy as np
 
 from utils.distances import pdist, euclidean
 
+UNDEFINED = 0
+NOISE = -1
+
 
 class DBSCAN:
 
-    def __init__(self, min_samples, epsilon):
+    def __init__(self, eps=0.5, min_samples=5):
 
         self.min_samples = min_samples
         self.epsilon = epsilon
@@ -26,31 +29,34 @@ class DBSCAN:
 
     def _dbscan(self, X):
 
-        index = 0
+        cluster_index = UNDEFINED
 
         for i, x in enumerate(X):
 
-            if self.labels_[i] == 0:  # point is undefined
+            if self.labels_[i] == UNDEFINED:
 
                 neighbours = self._get_neighbours(i)
 
-                if len(neighbours) >= self.min_samples:
+                if len(neighbours) < self.min_samples:
 
-                    index += 1
-                    self.labels_[i] = index
+                    self.labels_[i] = NOISE  # defined as noise
+
+                else:
+
+                    cluster_index += 1  # create a new cluster
+
+                    self.labels_[i] = cluster_index  # assign the core point to the cluster
 
                     for neighbour in neighbours:
 
-                        if self.labels_[neighbour] <= 0:  # undefined or noise
-                            self.labels_[neighbour] = index
+                        if self.labels_[neighbour] == UNDEFINED or self.labels_[neighbour] == NOISE:
+
+                            self.labels_[neighbour] = cluster_index
 
                             new_neighbours = np.array([n for n in self._get_neighbours(neighbour)
                                                        if n not in neighbours])
 
                             neighbours = np.hstack((neighbours, new_neighbours))
-
-                else:
-                    self.labels_[i] = -1  # defined as noise
 
             yield self.labels_
 
@@ -71,10 +77,3 @@ class DBSCAN:
     def predict(self, X):
 
         return
-
-if __name__ == "__main__":
-
-    X = np.random.rand(10, 2)
-
-    clust = DBSCAN(min_samples=3, epsilon=0.5)
-    clust.fit(X)

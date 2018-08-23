@@ -3,6 +3,7 @@ import itertools
 import pytest
 import numpy as np
 
+from sklearn.feature_extraction import DictVectorizer
 import sklearn.preprocessing as sklearn
 import utils.preprocessing as skratch
 
@@ -13,6 +14,64 @@ n_features = range(10, 100, 10)
 threshold = np.linspace(0, 1, 5)
 norm = ["l2", "l1", "max"]
 degree = range(2, 5)
+
+
+@pytest.mark.parametrize("n", range(3, 20))
+def test_label_binarizer_fit_transform(n):
+
+    max_value = 10
+    y = np.array([np.random.randint(max_value) for _ in range(n)])
+
+    enc0 = skratch.LabelBinarizer()
+    ENC0 = enc0.fit_transform(y)
+    enc1 = sklearn.LabelBinarizer()
+    ENC1 = enc1.fit_transform(y)
+
+    assert (ENC0 == ENC1).all()
+
+
+@pytest.mark.parametrize("n", range(3, 20))
+def test_label_binarizer_inverse_transform(n):
+
+    max_value = 10
+    y = np.array([np.random.randint(max_value) for _ in range(n)])
+
+    enc0 = skratch.LabelBinarizer()
+    ENC0 = enc0.fit_transform(y)
+
+    print(y)
+    print(enc0.inverse_transform(ENC0))
+
+    assert (enc0.inverse_transform(ENC0) == y).all()
+
+
+@pytest.mark.parametrize("n", range(3, 20))
+def test_label_encoder_fit_transform(n):
+
+    max_value = 10
+    y = np.array([np.random.randint(max_value) for _ in range(n)])
+
+    enc0 = skratch.LabelEncoder()
+    ENC0 = enc0.fit_transform(y)
+    enc1 = sklearn.LabelEncoder()
+    ENC1 = enc1.fit_transform(y)
+
+    assert (ENC0 == np.array(ENC1)).all()
+
+
+@pytest.mark.parametrize("n", range(3, 20))
+def test_label_encoder_inverse_transform(n):
+
+    max_value = 10
+    y = np.array([np.random.randint(max_value) for _ in range(n)])
+
+    enc0 = skratch.LabelEncoder()
+    ENC0 = enc0.fit_transform(y)
+
+    print(y)
+    print(enc0.inverse_transform(ENC0))
+
+    assert (enc0.inverse_transform(ENC0) == y).all()
 
 
 @pytest.mark.parametrize("n_samples", n_samples)

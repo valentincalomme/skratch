@@ -1,16 +1,31 @@
-# ML FROM SCRATCH #
-
-def linear_kernel(x1, x2):
-
-    return np.inner(x1, x2)
+import numpy as np
 
 
-def polynomial_kernel(x1, x2, power, coef):
+class LinearKernel:
 
-    return (np.inner(x1, x2) + coef)**power
+    def __init__(self, **kwargs):
+        pass
+
+    def __call__(self, x1, x2):
+        return np.inner(x1, x2)
 
 
-def rbf_kernel(x1, x2, gamma):
+def PolynomialKernel:
 
-    distance = np.linalg.norm(x1 - x2) ** 2
-    return np.exp(-gamma * distance)
+    def __init__(self, power, coef, **kwargs):
+        self.power = power
+        self.coef = coef
+
+    def __call__(self, x1, x2):
+        return (np.inner(x1, x2) + self.coef)**self.power
+
+
+class RBF:
+
+    def __init__(self, gamma, **kwargs):
+        self.gamma = gamma
+
+    def __call__(self, x1, x2):
+
+        distance = np.linalg.norm(x1 - x2) ** 2
+        return np.exp(-self.gamma * distance)
