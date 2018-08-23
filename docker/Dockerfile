@@ -1,15 +1,11 @@
-FROM python:3.6.4-alpine3.7 as env
+FROM python:3.6.2 as env
 
-ENV ALPINE_VERSION 3.7
-
-RUN apk update &&\
-    apk upgrade &&\
-    apk add git
-
+RUN apt-get update && apt-get install gcc
 RUN git clone git://github.com/valentincalomme/skratch /src
 
-WORKDIR src/skratch
+WORKDIR src
 
-RUN pip install -r requirements
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 
 ADD notebooks/ /home/jovyan/
