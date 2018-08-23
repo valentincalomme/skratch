@@ -8,4 +8,6 @@ WORKDIR src
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-ADD notebooks/ /home/jovyan/
+# RUN mv -v notebooks/* ~/home/jovyan/
+
+CMD jupyter notebook --ip 0.0.0.0 --port 8888 --no-browser --allow-root
