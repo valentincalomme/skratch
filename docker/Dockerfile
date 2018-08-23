@@ -4,9 +4,12 @@ ENV ALPINE_VERSION 3.7
 
 RUN apk update &&\
     apk upgrade &&\
-    apk add sudo g++
+    apk add git
 
+RUN git clone git://github.com/valentincalomme/skratch /src
 
+WORKDIR src/skratch
 
+RUN pip install -r requirements
 
-CMD ["python", "-c" "print('hello world')"]
+ADD notebooks/ /home/jovyan/
