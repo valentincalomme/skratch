@@ -10,8 +10,8 @@ n_samples = 1000
 k = 4
 
 # X = blobs(n_samples=n_samples, n_features=2, centers=3)
-X, _ = noisy_moons_
-# X = np.random.rand(n_samples, 2)
+# X, _ = noisy_moons_
+X = np.random.rand(n_samples, 2)
 
 kmedoids = KMedoids(k=4)
 colors = np.random.rand(kmedoids.k, 3)
@@ -32,6 +32,6 @@ for c, l in kmedoids._fit(X):
     line, = ax.plot(c[:, 0], c[:, 1], '.', c='black', ms=30)
     ims.append(ax.lines[-(kmedoids.k + 1):])
 
-anim = animation.ArtistAnimation(fig, ims, interval=400, blit=True, repeat_delay=100)
-# anim.save("kmeans.mp4")
+anim = animation.ArtistAnimation(fig, ims, interval=400, blit=True, repeat_delay=500)
+anim.save("visualization/gif/kmedoids.mp4")
 plt.show()

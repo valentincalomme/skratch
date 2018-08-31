@@ -33,5 +33,5 @@ for c, l in kmedians._fit(X):
     ims.append(ax.lines[-(kmedians.k + 1):])
 
 anim = animation.ArtistAnimation(fig, ims, interval=400, blit=True, repeat_delay=100)
-# anim.save("kmeans.mp4")
+anim.save("visualization/gif/kmedians.mp4")
 plt.show()
