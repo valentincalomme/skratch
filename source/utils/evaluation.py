@@ -1,19 +1,62 @@
-import numpy as np
+I import numpy as np
 
-from utils.distances import correlation
+from utils.distances import correlation, euclidean, cdist
 from itertools import combinations
 
 
-def adjusted_rand_score(X, Y):
+def silhouette_index(X, y, distance=euclidean):
+
+    def inter_cluster_distance(sample_id):
+
+        other_sample_ids = np.array([i for i in range(len(X)) if i != sample_id])
+        cluster_ids = y[other_sample_ids]
+        cluster_id = y[sample_id]
+        x = X[sample_id]
+
+        cluster = X[other_sample_ids][cluster_ids == cluster_id]
+
+        if len(cluster) == 0:
+            return 0
+        else:
+            distances = cdist([x], cluster, distance)
+            return np.mean(distances)
+
+    def nearest_cluster_distance(sample_id):
+
+        x = X[sample_id]
+        dist = float('inf')
+
+        for other_cluster_id in set(y[y != y[sample_id]]):
+
+            cluster = X[y == other_cluster_id]
+
+            new_dist = np.mean(cdist([x], cluster, distance))
+
+            dist = new_dist if new_dist < dist else dist
+
+        return dist
+
+    s = []
+
+    for i, x in enumerate(X):
+
+        a = inter_cluster_distance(i)
+        b = nearest_cluster_distance(i)
+
+        s.append((b - a) / max(a, b))
+
+    return np.mean(s)
+
+def rand_index(X, y):
 
     a = b = c = d = 0
 
     for i, j in combinations(range(len(X)), 2):
 
-        a += X[i] == X[j] and Y[i] == Y[j]
-        b += X[i] != X[j] and Y[i] != Y[j]
-        c += X[i] == X[j] and Y[i] != Y[j]
-        d += X[i] != X[j] and Y[i] == Y[j]
+        a += X[i] == X[j] and y[i] == y[j]
+        b += X[i] != X[j] and y[i] != y[j]
+        c += X[i] == X[j] and y[i] != y[j]
+        d += X[i] != X[j] and y[i] == y[j]
 
     return (a + b) / (a + b + c + d)
 
@@ -134,7 +177,7 @@ def precision(predicted_target, target):
 
         tp = (target == c) & (predicted_target == c)
         fp = (target != c) & (predicted_target == c)
-        
+
         precision_per_class[c] = np.sum(tp) / np.sum(tp + fp)
 
     weighted_precision = np.sum([precision_per_class[c] * counts[c] / len(target) for c in classes])
