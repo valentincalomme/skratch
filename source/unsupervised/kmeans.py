@@ -17,6 +17,39 @@ class KMeans:
 
         return euclidean(a, b)
 
+    def _inertia(self, X, centroids, labels):
+
+        distances = []
+
+        for i, centroid in enumerate(centroids):
+
+            distances.extend([self._distance(x, centroid)**2 for x in X[labels == i]])
+
+        return np.sum(distances)
+
+    def _compute_centroids(self, X, labels):
+
+        centroids = []
+
+        for i in range(self.k):
+
+            centroid = np.mean(X[labels == i], axis=0)
+            centroids.append(centroid)
+
+        return np.array(centroids)
+
+    def _compute_labels(self, X, centroids):
+
+        labels = []
+
+        for x in X:
+
+            distances = [self._distance(x, centroid) for centroid in centroids]
+            label = np.argmin(distances)
+            labels.append(label)
+
+        return np.array(labels)
+
     def predict(self, X):
 
         return self._compute_labels(X, self.centroids_)
@@ -63,35 +96,22 @@ class KMeans:
         self.rnd.shuffle(X_)
         return X_[:self.k]
 
-    def _compute_centroids(self, X, labels):
+    def _kmeans_pp(self, X):
 
         centroids = []
 
-        for i in range(self.k):
+        weights = np.ones(len(X))
+        weights /= weights.sum()
 
-            centroid = np.mean(X[labels == i], axis=0)
+        for k in range(self.k):
+
+            centroid = X[np.random.choice(np.arange(len(X)), 1, p=weights)[0], :]
+
             centroids.append(centroid)
 
-        return np.array(centroids)
+            distances = np.array([self._distance(centroid, x) for x in X])
 
-    def _compute_labels(self, X, centroids):
+            weights = distances**2
+            weights /= weights.sum()
 
-        labels = []
-
-        for x in X:
-
-            distances = [self._distance(x, centroid) for centroid in centroids]
-            label = np.argmin(distances)
-            labels.append(label)
-
-        return np.array(labels)
-
-    def _inertia(self, X, centroids, labels):
-
-        distances = []
-
-        for i, centroid in enumerate(centroids):
-
-            distances.extend([self._distance(x, centroid) for x in X[labels == i]])
-
-        return np.sum(distances)
+        return centroids
