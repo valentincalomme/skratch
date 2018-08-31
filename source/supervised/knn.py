@@ -9,10 +9,11 @@ from utils.distances import euclidean
 
 class KNN:
 
-    def __init__(self, k, weighted=False):
+    def __init__(self, k, distance=euclidean, weighted=False):
 
         self.k = k
         self.weighted = weighted  # Whether or not to use weighted distances
+        self.distance = distance
 
     def fit(self, X, y):
 
@@ -34,9 +35,9 @@ class KNN:
 
         for x in X:
 
-            neighbours, distances = self._get_neighbours(x)
+            neighbours_id, distances = self._get_neighbours(x)
 
-            prediction = self._vote(neighbours, distances)  # Make a prediction
+            prediction = self._vote(self.y_[neighbours_id], distances)  # Make a prediction
 
             predictions.append(prediction)
 
@@ -44,14 +45,10 @@ class KNN:
 
     def _get_neighbours(self, x):
 
-        distances = np.array([self._distance(x, x_) for x_ in self.X_])
+        distances = np.array([self.distance(x, x_) for x_ in self.X_])
         indices = np.argsort(distances)[:self.k]  # keep the indices of the k-nearest neighbours
 
-        return self.y_[indices], distances[indices]
-
-    def _distance(self, a, b):
-
-        return euclidean(a, b)
+        return indices, distances[indices]
 
     def _get_weights(self, distances):
 
