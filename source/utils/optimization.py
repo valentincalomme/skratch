@@ -31,7 +31,7 @@ class StochasticGradientDescentOptimizer:
         self.learning_rate = learning_rate
         self.parameter_update = None
 
-    def step(self, parameters, gradient):
+    def step(self, parameters, gradient, **kwargs):
 
         if self.parameter_update is None:
             self.parameter_update = np.zeros(len(parameters))
@@ -49,7 +49,7 @@ class NesterovAcceleratedGradientOptimizer:
         self.momentum = momentum
         self.parameter_update = None
 
-    def step(self, parameters, gradient):
+    def step(self, parameters, gradient, **kwargs):
 
         if self.parameter_update is None:
             self.parameter_update = np.zeros(len(parameters))

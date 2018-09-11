@@ -44,13 +44,13 @@ class NBClassifier(object):
 
         return self.class_counts_
 
+    def _get_prior(self, c):
+
+        return self.class_counts_[c] / np.sum(self.class_counts_)
+
     def _update_priors(self, y):
 
         self.classes_, counts = np.unique(y, return_counts=True)
         self.class_counts_ += counts
 
         return self.class_counts_
-
-    def _get_prior(self, c):
-
-        return self.class_counts_[c] / np.sum(self.class_counts_)

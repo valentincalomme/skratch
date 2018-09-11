@@ -10,7 +10,7 @@ class LinearKernel:
         return np.inner(x1, x2)
 
 
-def PolynomialKernel:
+class PolynomialKernel:
 
     def __init__(self, power, coef, **kwargs):
         self.power = power

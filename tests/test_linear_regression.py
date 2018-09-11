@@ -35,27 +35,6 @@ def get_X_y(n_samples, n_features, fit_intercept):
 
     return X, y
 
-
-@pytest.mark.parametrize("n_samples", n_samples)
-@pytest.mark.parametrize("n_features", n_features)
-@pytest.mark.parametrize("fit_intercept", [0, 1])
-def test_linear_regression(n_samples, n_features, fit_intercept):
-
-    X, y = get_X_y(n_samples, n_features, fit_intercept)
-
-    X = StandardScaler().fit_transform(X)
-    optimizer = GradientDescentOptimizer(learning_rate, momentum)
-
-    r0 = skratch.LinearRegression(optimizer, tol=tol, fit_intercept=fit_intercept).fit(X, y).predict(X)
-    r1 = sklearn.LinearRegression(fit_intercept=fit_intercept).fit(X, y).predict(X)
-
-    # assert np.mean((r0 - r1) / (r1 + 1E-18)) < EPSILON
-
-    error_r0 = np.mean((r0 - y)**2)
-    error_r1 = np.mean((r1 - y)**2)
-
-    assert np.abs(error_r0 - error_r1) < EPSILON
-
 # @pytest.mark.parametrize("n_samples", n_samples)
 # @pytest.mark.parametrize("n_features", n_features)
 # @pytest.mark.parametrize("fit_intercept", [0, 1])
