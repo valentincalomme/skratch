@@ -17,10 +17,10 @@ reg = LinearRegression(tol=1E-6, seed=seed)
 X = np.reshape(np.linspace(-1, 1, n_samples), (n_samples, 1))
 
 np.random.seed(seed)
-weights = np.random.normal(0, 2, degree+1)
+weights = np.random.normal(0, 2, degree + 1)
 
 noise = np.random.normal(0, 0.1, n_samples)
-y = add_dummy_feature(X).dot(weights)+ noise
+y = add_dummy_feature(X).dot(weights) + noise
 
 y[0] += np.random.normal(2, 3)
 
@@ -42,7 +42,7 @@ for weights_, new_loss in reg._fit(X, y):
 
     prediction, = ax.plot(X.squeeze(), y, '.r')
     correct, = ax.plot(X.squeeze(), y_, 'b')
-    
+
     lines.append(prediction)
     lines.append(correct)
 

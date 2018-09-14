@@ -15,7 +15,7 @@ n_classes = 2
 seed = 7
 
 
-plt.figure(figsize=[20,10])
+plt.figure(figsize=[20, 10])
 np.random.seed(seed)
 
 X = 2.0 * np.random.rand(n_samples, n_features) - 1.0
@@ -77,5 +77,3 @@ plt.show()
 
 
 # plt.show()
-
-

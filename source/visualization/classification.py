@@ -17,7 +17,7 @@ n_classes = 2
 
 #seed = 7
 
-clf = SVC(C = 999 )
+clf = SVC(C=999)
 
 
 plt.figure(figsize=[20, 10])
@@ -30,7 +30,6 @@ for seed, s in zip([7, 17, 20, 19],  [221, 222, 223, 224]):
 
     X = 2.0 * np.random.rand(n_samples, n_features) - 1.0
     weights = 2.0 * np.random.rand(n_features * dim) - 1.0
-
 
     def f(x):
 
@@ -46,7 +45,6 @@ for seed, s in zip([7, 17, 20, 19],  [221, 222, 223, 224]):
 
     y = f(X + np.random.normal(0, noise, size=X.shape))
 
-
     clf.fit(X, y)
 
     #np.random.normal(0, noise, size=x.shape)
@@ -56,7 +54,7 @@ for seed, s in zip([7, 17, 20, 19],  [221, 222, 223, 224]):
     y_min, y_max = X[:, 1].min(), X[:, 1].max()
     xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                          np.arange(y_min, y_max, h))
-    Z = clf.predict(np.c_[xx.ravel(), yy.ravel()])#f(np.c_[xx.ravel(), yy.ravel()])
+    Z = clf.predict(np.c_[xx.ravel(), yy.ravel()])  # f(np.c_[xx.ravel(), yy.ravel()])
     Z = Z.reshape(xx.shape)
 
     for i in range(n_classes + 1):

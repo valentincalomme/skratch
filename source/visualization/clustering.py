@@ -9,7 +9,7 @@ num_points = 1000
 seed = 2
 
 X1 = blobs(n_samples=num_points, centers=3, cluster_std=.4, random_state=seed)
-X2 = moons(n_samples=num_points//10, random_state=seed)
+X2 = moons(n_samples=num_points // 10, random_state=seed)
 X3 = circles(n_samples=num_points, factor=.5, noise=.05)
 X4 = blobs(n_samples=num_points, cluster_std=1, centers=2, random_state=seed)
 
@@ -19,7 +19,7 @@ plt.figure(figsize=(20, 10))
 for clst, X, s in zip([DBSCAN(eps=1, min_samples=20),
                        DBSCAN(eps=.3),
                        DBSCAN(eps=.2, min_samples=10),
-                       DBSCAN(eps=2)], [X1, X2, X3, X4], [111]):#[221, 222, 223, 224]):
+                       DBSCAN(eps=2)], [X1, X2, X3, X4], [111]):  # [221, 222, 223, 224]):
 
     plots = []
     y = clst.fit_predict(X)

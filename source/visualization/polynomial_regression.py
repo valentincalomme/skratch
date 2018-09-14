@@ -15,10 +15,10 @@ n_samples = 50
 
 X = np.reshape(np.linspace(-1, 1, n_samples), (n_samples, 1))
 
-X1 = np.array([[x ** i for i in range(1, 1+1)] for x in X.squeeze()])#polynomial_features(X, 1)
-X2 = np.array([[x ** i for i in range(1, 2+1)] for x in X.squeeze()])#polynomial_features(X, 2)
-X3 = np.array([[x ** i for i in range(1, 3+1)] for x in X.squeeze()])#polynomial_features(X, 3)
-X4 = np.array([[x ** i for i in range(1, 4+1)] for x in X.squeeze()])#polynomial_features(X, 4)
+X1 = np.array([[x ** i for i in range(1, 1 + 1)] for x in X.squeeze()])  # polynomial_features(X, 1)
+X2 = np.array([[x ** i for i in range(1, 2 + 1)] for x in X.squeeze()])  # polynomial_features(X, 2)
+X3 = np.array([[x ** i for i in range(1, 3 + 1)] for x in X.squeeze()])  # polynomial_features(X, 3)
+X4 = np.array([[x ** i for i in range(1, 4 + 1)] for x in X.squeeze()])  # polynomial_features(X, 4)
 
 weights1 = np.random.normal(1, 2, 1)
 y1 = (X1 + np.random.normal(0, 0.1, size=X1.shape)).dot(weights1)  # function of the curve with some normal noise added
@@ -47,10 +47,10 @@ fig2 = plt.figure(figsize=(5, 5))
 fig3 = plt.figure(figsize=(5, 5))
 fig4 = plt.figure(figsize=(5, 5))
 
-ax1 = fig1.add_subplot(1,1,1)
-ax2 = fig2.add_subplot(1,1,1)
-ax3 = fig3.add_subplot(1,1,1)
-ax4 = fig4.add_subplot(1,1,1)
+ax1 = fig1.add_subplot(1, 1, 1)
+ax2 = fig2.add_subplot(1, 1, 1)
+ax3 = fig3.add_subplot(1, 1, 1)
+ax4 = fig4.add_subplot(1, 1, 1)
 
 
 ys = [y1, y2, y3, y4]
@@ -64,12 +64,12 @@ for degree in range(1, 5):
 
     ims = []
 
-    fig = figs[degree-1]
-    reg = regs[degree-1]
-    X = Xs[degree-1]
+    fig = figs[degree - 1]
+    reg = regs[degree - 1]
+    X = Xs[degree - 1]
     y = ys[degree - 1]
 
-    ax = axs[degree-1]
+    ax = axs[degree - 1]
 
     ims = []
 
@@ -81,8 +81,8 @@ for degree in range(1, 5):
     for _weights, _loss in reg._fit(X, y):
         lines = []
         y_ = reg.predict(X, _weights)
-        correct, = ax.plot(X[:,0].squeeze(), y, '.r')
-        prediction, = ax.plot(X[:,0].squeeze(), y_, 'b')
+        correct, = ax.plot(X[:, 0].squeeze(), y, '.r')
+        prediction, = ax.plot(X[:, 0].squeeze(), y_, 'b')
 
         lines.append(prediction)
         lines.append(correct)

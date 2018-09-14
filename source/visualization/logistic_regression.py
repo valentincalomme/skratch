@@ -26,8 +26,6 @@ y = sigmoid(features.dot(weights)) > 0.5
 
 clf = LogisticRegression(tol=1E-4, fit_intercept=False, seed=seed)
 
-# clf.fit(features, y)
-
 #######################################################
 ###################### Animation ######################
 #######################################################
@@ -35,7 +33,7 @@ clf = LogisticRegression(tol=1E-4, fit_intercept=False, seed=seed)
 fig = plt.figure(figsize=(20, 20))
 
 ax = fig.add_subplot(111)
-ax.set_xlim([-2.5,2.5])
+ax.set_xlim([-2.5, 2.5])
 ax.set_ylim([-2.5, 3])
 
 ims = []
@@ -55,7 +53,6 @@ for weights_, new_loss in clf._fit(features, y):
 
     Z = clf.predict(XX, weights_) > 0.5
     Z = Z.reshape(xx.shape)
-
 
     class1, = ax.plot(X[y == 0][:, 0], X[y == 0][:, 1], ".g", markersize=15)
     class2, = ax.plot(X[y == 1][:, 0], X[y == 1][:, 1], ".r", markersize=15)

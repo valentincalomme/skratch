@@ -9,6 +9,7 @@ from supervised.knn import KNN_Classifier
 from utils.activation import Sigmoid
 from datasets.classification import blobs
 
+
 def points(n=10):
     r = 1.5
 
@@ -28,7 +29,7 @@ weights = np.random.rand(2)
 # X_ = (maximum - minimum) * np.random.rand(n_points, 2) + minimum
 # y = sigmoid(X_.dot(weights)) > 0.5
 # y = np.random.randint(0, 2, n_points)
-X_, y = blobs(n_points, centers=2, center_box=(0,0), cluster_std=1)
+X_, y = blobs(n_points, centers=2, center_box=(0, 0), cluster_std=1)
 
 fig = plt.figure(figsize=(40, 20))
 
@@ -68,4 +69,4 @@ anim = animation.ArtistAnimation(fig, ims, interval=20, blit=True, repeat_delay=
 
 plt.show()
 
-anim.save("visualization/gif/knn_classification_anim.mp4", frame_size=(20,10))
+anim.save("visualization/gif/knn_classification_anim.mp4", frame_size=(20, 10))
