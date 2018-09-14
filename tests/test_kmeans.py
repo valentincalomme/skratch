@@ -7,7 +7,7 @@ from sklearn.cluster import KMeans as sklearn_KMeans
 from unsupervised.kmeans import KMeans as skratch_KMeans
 
 from datasets.clustering import noisy_moons_, noisy_circles_, aniso_, varied_, no_structure_, blobs_, blobs
-from utils.evaluation import adjusted_rand_score
+from utils.evaluation import rand_index
 
 EPSILON = 1E-1
 
@@ -28,7 +28,7 @@ def test_kmeans_vs_sklearn(k):
     X = skr.fit(dataset).predict(dataset)
     Y = skl.fit(dataset).predict(dataset)
 
-    assert adjusted_rand_score(X, Y) >= 1 - EPSILON
+    assert rand_index(X, Y) >= 1 - EPSILON
 
 
 @pytest.mark.parametrize("k, seed", itertools.product(KS, range(4)))
@@ -44,4 +44,4 @@ def test_kmeans_is_not_stochastic(k, seed):
     X = skr1.fit(dataset).predict(dataset)
     Y = skr2.fit(dataset).predict(dataset)
 
-    assert adjusted_rand_score(X, Y) > 1 - EPSILON
+    assert rand_index(X, Y) > 1 - EPSILON
