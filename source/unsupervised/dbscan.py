@@ -1,79 +1,83 @@
-import numpy as np
-
-from utils.distances import pdist, euclidean
-
-UNDEFINED = 0
-NOISE = -1
+"""Implementation coming soon"""
 
 
-class DBSCAN:
 
-    def __init__(self, eps=0.5, min_samples=5):
+# import numpy as np
 
-        self.min_samples = min_samples
-        self.epsilon = epsilon
+# from utils.distances import pdist, euclidean
 
-    def _distance(self, a, b):
+# UNDEFINED = 0
+# NOISE = -1
 
-        return euclidean(a, b)
 
-    def fit(self, X, y=None):
+# class DBSCAN:
 
-        self.labels_ = self._initialize_labels(X, index=0)
-        self.distances_ = self._compute_distances(X)
+#     def __init__(self, eps=0.5, min_samples=5):
 
-        for labels in self._dbscan(X):
-            print(labels)
+#         self.min_samples = min_samples
+#         self.epsilon = epsilon
 
-        return self
+#     def _distance(self, a, b):
 
-    def _dbscan(self, X):
+#         return euclidean(a, b)
 
-        cluster_index = UNDEFINED
+#     def fit(self, X, y=None):
 
-        for i, x in enumerate(X):
+#         self.labels_ = self._initialize_labels(X, index=0)
+#         self.distances_ = self._compute_distances(X)
 
-            if self.labels_[i] == UNDEFINED:
+#         for labels in self._dbscan(X):
+#             print(labels)
 
-                neighbours = self._get_neighbours(i)
+#         return self
 
-                if len(neighbours) < self.min_samples:
+#     def _dbscan(self, X):
 
-                    self.labels_[i] = NOISE  # defined as noise
+#         cluster_index = UNDEFINED
 
-                else:
+#         for i, x in enumerate(X):
 
-                    cluster_index += 1  # create a new cluster
+#             if self.labels_[i] == UNDEFINED:
 
-                    self.labels_[i] = cluster_index  # assign the core point to the cluster
+#                 neighbours = self._get_neighbours(i)
 
-                    for neighbour in neighbours:
+#                 if len(neighbours) < self.min_samples:
 
-                        if self.labels_[neighbour] == UNDEFINED or self.labels_[neighbour] == NOISE:
+#                     self.labels_[i] = NOISE  # defined as noise
 
-                            self.labels_[neighbour] = cluster_index
+#                 else:
 
-                            new_neighbours = np.array([n for n in self._get_neighbours(neighbour)
-                                                       if n not in neighbours])
+#                     cluster_index += 1  # create a new cluster
 
-                            neighbours = np.hstack((neighbours, new_neighbours))
+#                     self.labels_[i] = cluster_index  # assign the core point to the cluster
 
-            yield self.labels_
+#                     for neighbour in neighbours:
 
-    def _get_neighbours(self, index):
+#                         if self.labels_[neighbour] == UNDEFINED or self.labels_[neighbour] == NOISE:
 
-        indices, = np.where(self.distances_[index] < self.epsilon)
+#                             self.labels_[neighbour] = cluster_index
 
-        return indices[indices != index]
+#                             new_neighbours = np.array([n for n in self._get_neighbours(neighbour)
+#                                                        if n not in neighbours])
 
-    def _initialize_labels(self, X, index):
+#                             neighbours = np.hstack((neighbours, new_neighbours))
 
-        return np.full(len(X), index)
+#             yield self.labels_
 
-    def _compute_distances(self, X):
+#     def _get_neighbours(self, index):
 
-        return pdist(X, self._distance)
+#         indices, = np.where(self.distances_[index] < self.epsilon)
 
-    def predict(self, X):
+#         return indices[indices != index]
 
-        return
+#     def _initialize_labels(self, X, index):
+
+#         return np.full(len(X), index)
+
+#     def _compute_distances(self, X):
+
+#         return pdist(X, self._distance)
+
+#     def predict(self, X):
+
+#         return

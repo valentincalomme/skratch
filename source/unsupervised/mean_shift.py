@@ -3,15 +3,35 @@
 import numpy as np
 
 from utils.kernels import RBF
+from utils.distances import euclidean
 
 
 class MeanShift:
 
-    def __init__(self, kernel=RBF, bandwith=1, cluster_all=True):
+    def __init__(self, bandwith=1, tol=1E-7):
 
         self.bandwith = bandwith
-        self.cluster_all = cluster_all
+        self.tol = 1 - tol
         self.kernel = RBF(gamma=self.bandwith)
+
+    def _compute_labels(self, X, centers):
+
+        labels = []
+
+        for x in X:
+
+            distances = np.array([euclidean(x, center) for center in centers])
+            label = np.argmin(distances)
+            labels.append(label)
+
+        _, labels = np.unique(labels, return_inverse=True)
+        return np.array(labels, dtype=np.int)
+
+    def predict(self, X):
+
+        labels = self._compute_labels(X, self.cluster_centers_)
+
+        return labels
 
     def fit(self, X):
 
@@ -24,9 +44,9 @@ class MeanShift:
 
     def _fit(self, X):
 
-        old_centers = None
+        old_centers = np.array([])
         new_centers = X
-        labels = -np.ones(len(X))
+        labels = -np.ones(len(X))  # -1 represents an "orphan"
 
         while not self._has_converged(old_centers, new_centers):
 
@@ -35,84 +55,43 @@ class MeanShift:
             old_centers = new_centers
             new_centers = []
 
-            for i, center in enumerate(old_centers):
+            for center in old_centers:
 
                 shifted_center = self._shift(center, X)
-
                 new_centers.append(shifted_center)
 
-            new_centers = np.unique(new_centers, axis=0)
-
+            new_centers = self._merge_centers(new_centers)
             labels = self._compute_labels(X, new_centers)
-
-    def _has_converged(self, old_centers, new_centers):
-
-        if old_centers is None or new_centers is None:
-            return False
-        else:
-            return set(tuple(_) for _ in old_centers) == set(tuple(_) for _ in new_centers)
 
     def _shift(self, x, X):
 
-        distances = np.array([self.kernel(x, x_) for x_ in X])
-        # print(distances < self.bandwith)
-        neighbourhood, = np.where(distances < self.bandwith)
+        densities = [self.kernel(x, x_) for x_ in X]
 
-        shifted_center = np.mean(X[neighbourhood], axis=0)
+        shifted_center = np.average(X, weights=densities, axis=0)
 
         return shifted_center
 
-    def _compute_labels(self, X, centers):
+    def _merge_centers(self, centers):
 
-        labels = []
+        centers = np.unique(centers, axis=0)
+        new_centers = []
 
-        for x in X:
+        for c in centers:
+            distances = np.array([self.kernel(c, c_) for c_ in centers])
+            new_centers.append(np.mean(centers[distances > self.tol], axis=0))
 
-            distances = [self.kernel(x, center) for center in centers]
-            label = np.argmin(distances)
-            labels.append(label)
+        centers = np.unique(new_centers, axis=0)
 
-        return np.array(labels)
+        return centers
 
-    def predict(self, X):
+    def _has_converged(self, old, new):
 
-        labels = self._compute_labels(X, self.cluster_centers_)
+        if len(old) == len(new):
 
-        return labels
+            for i in range(len(new)):
+                if self.kernel(old[i], new[i]) < 1.0:
+                    return False
 
-if __name__ == "__main__":
-
-    import numpy as np
-    import matplotlib.pyplot as plt
-    import matplotlib.animation as animation
-
-    # from unsupervised.mean_shift import MeanShift
-
-    seed = 0
-
-    np.random.seed(seed)
-
-    cluster = MeanShift(bandwith=0.2)
-
-    n_samples = 10
-    X = np.random.normal(0, 2, (n_samples, 2))
-
-    fig = plt.figure()
-
-    ax = fig.add_subplot(111)
-
-    ims = []
-
-    for labels, centers in cluster._fit(X):
-
-        print("labels =", labels)
-        print("centers =", centers)
-
-        a, = ax.plot(X[:, 0], X[:, 1], "xb")
-        b, = ax.plot(centers[:, 0], centers[:, 1], "or")
-
-        ims.append([a, b])
-
-    anim = animation.ArtistAnimation(fig, ims, interval=400, blit=True, repeat_delay=100)
-
-    plt.show()
+            return True
+        else:
+            return False

@@ -1,1 +1,1 @@
-"""Multi-layer perceptron"""
+"""Implementation coming soon"""

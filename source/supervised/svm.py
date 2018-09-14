@@ -1,32 +1,35 @@
-"""Support vector machine"""
-
-import numpy as np
-
-from utils.kernels import RBF, LinearKernel, PolynomialKernel
-from utils.optimization import GradientDescentOptimizer
-from utils.distances import pdist
+"""Implementation coming soon"""
 
 
-class GaussianProcessRegressor:
+# """Support vector machine"""
 
-    def __init__(self, C=1.0, kernel=RBF(1.0), seed=0):
+# import numpy as np
 
-        self.C = C
-        self.kernel = kernel
-        self.rnd = np.random.RandomState(seed)
+# from utils.kernels import RBF, LinearKernel, PolynomialKernel
+# from utils.optimization import GradientDescentOptimizer
+# from utils.distances import pdist
 
-    def fit(self, X, y):
 
-        n_samples, n_features = X.shape
+# class GaussianProcessRegressor:
 
-        self.kernel_matrix = self._compute_kernel_matrix(X)
+#     def __init__(self, C=1.0, kernel=RBF(1.0), seed=0):
 
-        return self
+#         self.C = C
+#         self.kernel = kernel
+#         self.rnd = np.random.RandomState(seed)
 
-    def _compute_kernel_matrix(self, X):
+#     def fit(self, X, y):
 
-        return pdist(X, self.kernel)
+#         n_samples, n_features = X.shape
 
-    def predict(self, X):
+#         self.kernel_matrix = self._compute_kernel_matrix(X)
 
-        return None
+#         return self
+
+#     def _compute_kernel_matrix(self, X):
+
+#         return pdist(X, self.kernel)
+
+#     def predict(self, X):
+
+#         return None

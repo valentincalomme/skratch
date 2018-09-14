@@ -15,7 +15,7 @@ class LogisticRegression(LinearRegression):
 
     def predict(self, X, weights=None):
 
-        if self.fit_intercept is True:
+        if self.fit_intercept:
             X = add_dummy_feature(X)
 
         if weights is None:

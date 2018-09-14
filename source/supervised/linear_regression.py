@@ -27,7 +27,7 @@ class LinearRegression:
 
     def predict(self, X, weights=None):
 
-        if self.fit_intercept is True:
+        if self.fit_intercept:
             X = add_dummy_feature(X)
 
         if weights is None:
@@ -79,7 +79,9 @@ class LinearRegression:
 
     def _loss_gradient(self, X, y):
 
-        features = add_dummy_feature(X) if self.fit_intercept is True else X
+        features = X
+        if self.fit_intercept:
+            features = add_dummy_feature(features)
 
         prediction_loss_gradient = lambda weights: (self.predict(X, weights) - y).dot(features) / len(features)
         regularization_loss_gradient = lambda weights: self.regularizer.gradient(weights)
@@ -95,7 +97,7 @@ class AnalyticalLinearRegression:
 
     def predict(self, X, weights=None):
 
-        if self.fit_intercept is True:
+        if self.fit_intercept:
             X = add_dummy_feature(X)
 
         if weights is None:
@@ -105,7 +107,7 @@ class AnalyticalLinearRegression:
 
     def fit(self, X, y):
 
-        if self.fit_intercept is True:
+        if self.fit_intercept:
             X = add_dummy_feature(X)
 
         self.coef_ = np.linalg.inv(X.T.dot(X)).dot(X.T).dot(y)

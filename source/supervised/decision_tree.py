@@ -1,40 +1,43 @@
-import numpy as np
 
-from utils.evaluation import entropy, gini
+"""Implementation coming soon"""
 
+# import numpy as np
 
-class DecisionNode:
-
-    def __init__(self):
-
-        pass
+# from utils.evaluation import entropy, gini
 
 
-class DecisionTree:
+# class DecisionNode:
 
-    def __init__(self, criterion=gini, max_depth=None, min_samples_split=2, min_samples_leaf=1, max_features=None, seed=0):
+#     def __init__(self):
 
-        self.criterion = criterion
-        self.max_depth = max_depth
-        self.min_samples_leaf = min_samples_leaf
-        self.min_samples_split = min_samples_split
-        self.max_features = max_features
-        self.rnd = np.random.RandomState(seed)
+#         pass
 
-    def fit(self, X, y):
 
-        self.classes_ = np.unique(y)
+# class DecisionTree:
 
-        self.root = DecisionNode()
+#     def __init__(self, criterion=gini, max_depth=None, min_samples_split=2, min_samples_leaf=1, max_features=None, seed=0):
 
-        return self
+#         self.criterion = criterion
+#         self.max_depth = max_depth
+#         self.min_samples_leaf = min_samples_leaf
+#         self.min_samples_split = min_samples_split
+#         self.max_features = max_features
+#         self.rnd = np.random.RandomState(seed)
 
-    def _evaluate_split(self, left, right):
+#     def fit(self, X, y):
+
+#         self.classes_ = np.unique(y)
+
+#         self.root = DecisionNode()
+
+#         return self
+
+#     def _evaluate_split(self, left, right):
 
         
 
-    def 
+#     def 
 
-    def predict(self, X):
+#     def predict(self, X):
 
-        return None
+#         return None

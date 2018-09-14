@@ -47,6 +47,7 @@ def silhouette_index(X, y, distance=euclidean):
 
     return np.mean(s)
 
+
 def rand_index(X, y):
 
     a = b = c = d = 0
@@ -144,11 +145,6 @@ def confusion_matrix(predicted_target, target):
         confusion_matrix[t] = {o: np.sum((target == t) & (predicted_target == o)) for o in predicted_target_classes}
 
     return confusion_matrix
-
-
-def print_confusion_matrix(confusion_matrix):
-
-    for (o, t), v in confusion_matrix.items():
 
 
 def recall(predicted_target, target):
