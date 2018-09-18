@@ -49,5 +49,5 @@ for labels, centers in cluster._fit(X):
     ims.append(lines)
 
 anim = animation.ArtistAnimation(fig, ims, interval=200, blit=True, repeat_delay=100)
-anim.save("visualization/gif/mean_shift.mp4")
+# anim.save("visualization/gif/mean_shift.mp4")
 plt.show()

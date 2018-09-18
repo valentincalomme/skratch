@@ -67,5 +67,5 @@ for weights_, new_loss in clf._fit(features, y):
     ims.append(lines)
 
 anim = animation.ArtistAnimation(fig, ims, interval=100, blit=True, repeat_delay=50)
-anim.save("visualization/gif/logistic_regression2.mp4")
+# anim.save("visualization/gif/logistic_regression2.mp4")
 plt.show()

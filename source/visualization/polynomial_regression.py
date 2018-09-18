@@ -93,6 +93,6 @@ for degree in range(1, 5):
 
     anim = animation.ArtistAnimation(fig, ims, interval=100, blit=True, repeat_delay=50)
     anims.append(anim)
-    anim.save(f"visualization/gif/polymial_regression_{degree}.mp4")
+    # anim.save(f"visualization/gif/polymial_regression_{degree}.mp4")
 
 plt.show()
