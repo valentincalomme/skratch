@@ -40,21 +40,6 @@ class MultinomialNB(NBClassifier):
 
         return likelihood_
 
-    def _update_evidence(self, X):
-
-        self.evidence_ += np.sum(X, axis=0)
-
-        return self.evidence_
-
-    def _update_likelihood(self, X, y):
-
-        for i, c in enumerate(self.classes_):
-            samples = X[y == c]   # only keep samples of class c
-
-            self.likelihood_[i] += np.sum(samples, axis=0)
-
-        return likelihood_
-
     def _get_evidence(self, sample):
 
         p = []
@@ -88,3 +73,18 @@ class MultinomialNB(NBClassifier):
             p.append(prob)
 
         return self._pdf(sample, p)
+
+    def _update_evidence(self, X):
+
+        self.evidence_ += np.sum(X, axis=0)
+
+        return self.evidence_
+
+    def _update_likelihood(self, X, y):
+
+        for i, c in enumerate(self.classes_):
+            samples = X[y == c]   # only keep samples of class c
+
+            self.likelihood_[i] += np.sum(samples, axis=0)
+
+        return likelihood_

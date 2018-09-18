@@ -18,7 +18,7 @@ class GaussianNB(NBClassifier):
 
         feature_probas = []
 
-        for feature in X.T:  # take the transpose to iterate through the features instead of the samples
+        for feature in X.T:  # iterate through the features instead of the samples
 
             feature_probas.append(dict(mean=np.mean(feature),
                                        n=len(feature),
@@ -37,43 +37,6 @@ class GaussianNB(NBClassifier):
             likelihood_.append(self._fit_evidence(samples))
 
         return np.array(likelihood_)
-
-    def _update_evidence(self, X):
-
-        for i, feature in enumerate(X.T):   # take the transpose to iterate through the features instead of the samples
-
-            self.evidence_[i] = self._update_mean_std_n(feature, self.evidence_[i])
-
-        return self.evidence_
-
-    def _update_likelihood(self, X, y):
-
-        for c in self.classes_:
-
-            samples = X[y == c]  # only keep samples of class c
-
-            for i, feature in enumerate(samples.T):  # take the transpose to iterate through the features instead of the samples
-
-                self.likelihood_[c][i] = self._update_mean_std_n(feature, self.likelihood_[c][i])
-
-        return self.likelihood_
-
-    def _update_mean_std_n(self, feature, mean_std_n):
-
-        old_m = mean_std_n["mean"]
-        old_std = mean_std_n["std"]
-        old_n = mean_std_n["n"]
-
-        n = old_n + len(feature)
-
-        m = (old_m * old_n + np.mean(feature) * n) / (old_n + n)
-
-        s = np.sqrt((old_n * (old_std**2 + (old_m - m)**2)
-                     + len(feature) * (np.var(feature)
-                                       + (np.mean(feature) - m)**2)
-                     ) / (old_n + len(feature)))
-
-        return dict(mean=m, std=std, n=n)
 
     def _get_evidence(self, sample):
 
@@ -100,3 +63,40 @@ class GaussianNB(NBClassifier):
             likelihood *= self._pdf(feature, mean, std)
 
         return likelihood
+
+    def _update_evidence(self, X):
+
+        for i, feature in enumerate(X.T):   # iterate through the features instead of the samples
+
+            self.evidence_[i] = self._update_mean_std_n(feature, self.evidence_[i])
+
+        return self.evidence_
+
+    def _update_likelihood(self, X, y):
+
+        for c in self.classes_:
+
+            samples = X[y == c]  # only keep samples of class c
+
+            for i, feature in enumerate(samples.T):  # iterate through the features instead of the samples
+
+                self.likelihood_[c][i] = self._update_mean_std_n(feature, self.likelihood_[c][i])
+
+        return self.likelihood_
+
+    def _update_mean_std_n(self, feature, mean_std_n):
+
+        old_m = mean_std_n["mean"]
+        old_std = mean_std_n["std"]
+        old_n = mean_std_n["n"]
+
+        n = old_n + len(feature)
+
+        m = (old_m * old_n + np.mean(feature) * n) / (old_n + n)
+
+        s = np.sqrt((old_n * (old_std**2 + (old_m - m)**2)
+                     + len(feature) * (np.var(feature)
+                                       + (np.mean(feature) - m)**2)
+                     ) / (old_n + len(feature)))
+
+        return dict(mean=m, std=std, n=n)
