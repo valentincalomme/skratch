@@ -8,11 +8,11 @@ from utils.distances import euclidean
 
 class MeanShift:
 
-    def __init__(self, bandwith=1, tol=1E-7):
+    def __init__(self, bandwidth=1, tol=1E-7):
 
-        self.bandwith = bandwith
+        self.bandwidth = bandwidth
         self.tol = 1 - tol
-        self.kernel = RBF(gamma=self.bandwith)
+        self.kernel = RBF(gamma=self.bandwidth)
 
     def _compute_labels(self, X, centers):
 

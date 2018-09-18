@@ -13,19 +13,19 @@ plt.subplot(3,1,1)
 
 data, = plt.plot(x, y, '.', markersize=10)
 good, = plt.plot(x, f(x), 'g')
-plt.legend([data, good, high_bias, high_variance], ["Noisy Data", "Denoised Data"])
+plt.legend([data, good], ["Noisy Data", "Denoised Data"])
 
 plt.subplot(3,1,2)
 
 data, = plt.plot(x, y, '.', markersize=10)
 high_bias, = plt.plot(x, np.zeros_like(x),  'b')
-plt.legend([data, good, high_bias, high_variance], ["Noisy Data", "High bias"])
+plt.legend([data, high_bias], ["Noisy Data", "High bias"])
 
 plt.subplot(3,1,3)
 
 data, = plt.plot(x, y, '.', markersize=10)
 high_variance, = plt.plot(x, y, 'r')
-plt.legend([data, good, high_bias, high_variance], ["Noisy Data", "High variance"])
+plt.legend([data, high_variance], ["Noisy Data", "High variance"])
 
 
 plt.show()

@@ -19,7 +19,7 @@ plt.figure(figsize=(20, 10))
 for clst, X, s in zip([DBSCAN(eps=1, min_samples=20),
                        DBSCAN(eps=.3),
                        DBSCAN(eps=.2, min_samples=10),
-                       DBSCAN(eps=2)], [X1, X2, X3, X4], [111]):  # [221, 222, 223, 224]):
+                       DBSCAN(eps=2)], [X1, X2, X3, X4], [221, 222, 223, 224]):
 
     plots = []
     y = clst.fit_predict(X)

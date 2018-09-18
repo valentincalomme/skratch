@@ -65,4 +65,4 @@ anim = animation.ArtistAnimation(fig, ims, interval=400, blit=True, repeat_delay
 
 plt.show()
 
-anim.save("visualization/gif/cross_validation.mp4")
+# anim.save("visualization/gif/cross_validation.mp4")

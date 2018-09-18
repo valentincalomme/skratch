@@ -40,7 +40,7 @@ for labels, centers in cluster._fit(X):
 
     for i in set(cluster.labels_):
 
-        line, = ax.plot(X[labels == i][:, 0], X[labels == i][:, 1], '.', c=colors[int(i + 1)], ms=size // 2)
+        line, = ax.plot(X[labels == i][:, 0], X[labels == i][:, 1], '.', ms=size // 2, c="blue")#, c=colors[int(i + 1)])
         lines.append(line)
 
     b, = ax.plot(centers[:, 0], centers[:, 1], ".", c="black", ms=size)
@@ -49,5 +49,5 @@ for labels, centers in cluster._fit(X):
     ims.append(lines)
 
 anim = animation.ArtistAnimation(fig, ims, interval=200, blit=True, repeat_delay=100)
-
+anim.save("visualization/gif/mean_shift.mp4")
 plt.show()

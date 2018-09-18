@@ -69,4 +69,4 @@ anim = animation.ArtistAnimation(fig, ims, interval=20, blit=True, repeat_delay=
 
 plt.show()
 
-anim.save("visualization/gif/knn_classification_anim.mp4", frame_size=(20, 10))
+# anim.save("visualization/gif/knn_classification_anim.mp4", frame_size=(20, 10))
