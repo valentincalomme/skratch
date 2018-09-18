@@ -18,6 +18,8 @@ Python was picked because of its readability and popularity in the machine learn
 
 Understanding a topic typically starts with some intuition. This is why Skratch illustrates machine concepts with visualizations. Whether they are images or animations. And to stay in the spirit of implementing things from Skratch, clicking on every visualization in a learning unit will direct you to the piece of code that generated it. This way, it is possible to play around and create different visualizations. Matplotlib was the library that was chosen because of its simplicity and popularity.
 
+![](https://skratch.valentincalomme.com/wp-content/uploads/2018/08/knn_classification_anim-2.gif)
+
 ### Blogs, videos, Jupyter notebooks
 
 Everyone learns differently. Some may prefer reading a textbook, some may prefer attending a lecture. Because of this, we tried to provide material in as many formats as possible. First and foremost, the Github repository is there to provide all of the source code and the tests. Each learning unit is also provided as a Jupyter Notebook. This way, the code involved in a unit can be run right in the browser. On top of regular learning units, you’ll also find blogs discussing machine learning topics. Topics vary from intuition on some theoretical concept, to opinion pieces about the ethical implications of machine learning.
