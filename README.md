@@ -1,5 +1,7 @@
 # Skratch
 
+![](https://skratch.valentincalomme.com/wp-content/uploads/2018/09/HEADER-README.png)
+
 ## About
 
 ### Machine Learning from Skratch
