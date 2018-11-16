@@ -4,5 +4,6 @@ source/visualization/images/
 source/visualization/gif/
 **.cache/
 **.ipynb_checkpoints
+**checkpoint.ipynb
 Skratch_Project_Report.pdf
 **.rar
